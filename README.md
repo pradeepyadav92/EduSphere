@@ -1,158 +1,105 @@
-# College Management System
+# EduSphere - Advanced College ERP Platform
 
 [![MERN Stack](https://img.shields.io/badge/Stack-MERN-blue)](https://www.mongodb.com/mern-stack)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
-[![Node.js](https://img.shields.io/badge/Node.js-v14+-green)](https://nodejs.org)
-[![React](https://img.shields.io/badge/React-v17+-blue)](https://reactjs.org)
+[![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://github.com/pradeepyadav92/EduSphere)
 
-A comprehensive MERN stack-based College Management System that helps manage academic activities, student information, faculty details, and administrative tasks. This system streamlines the management of educational institutions by providing a centralized platform for administrators, faculty, and students.
+EduSphere is a robust, production-ready Enterprise Resource Planning (ERP) platform designed specifically for modern educational institutions. Built on the MERN stack, it provides a seamless interface for Administrators, Faculty, and Students to manage academic life effectively.
 
-## Features
+---
 
-### Admin Features
+## 🌟 Key Features
 
-- Manage faculty accounts with detailed profiles and emergency contacts
-- Manage student accounts with enrollment numbers and academic details
-- Manage academic branches
-- Handle subject/course management by semester and branch
-- Generate and manage notices for students and faculty
-- Upload and manage timetables by branch and semester
-- Profile management and password updates
+### 🔐 Multi-Role Authentication
+- Secure login for **Admins, Faculty, and Students**.
+- **DOB-based Login** for secondary admins.
+- Password hashing using **BcryptJS**.
 
-### Faculty Features
+### 📝 Student Self-Registration & Approval (NEW!)
+- Public application portal for new students.
+- Profile image upload & emergency contact tracking.
+- **Admin Approval Queue:** Admins review applications and generate sequential, branch-specific Roll Numbers in one click.
 
-- View and manage personal profile with emergency contacts
-- Upload and manage study materials (notes, assignments, syllabus)
-- Filter and organize materials by subject, semester, and type
-- Upload and manage timetables for their branches
-- Search and view student information by enrollment, name, or semester
-- View and respond to notices
-- Update profile and credentials
-- Password management and reset functionality
+### 💰 Transactional Fee Management
+- Year-wise fee tracking (Total, Paid, Remaining).
+- **Leger-style Transactions:** Every payment is recorded as a separate transaction with payment mode (UPI, Card, Cash).
+- Real-time balance updates.
 
-### Student Features
+### 📊 Academic & Attendance Tracking
+- **Day-wise Attendance:** Precise tracking for students.
+- **3-Tier Sessional Marks:** Supports Sessional 1, Sessional 2, and PUT (Pre-University Test).
+- Automated percentage and performance analytics.
 
-- View personal profile and academic details
-- Access study materials filtered by subject and type
-- View class timetables with download option
-- Access notices and announcements
-- Update profile information
-- Password management and reset functionality
+### 🏢 Department & Resource Management
+- **Branch Management:** Branch-specific sequential ID generation.
+- **Faculty-Subject Assignment:** Link teachers to specific courses.
+- **Material Repository:** Faculty can upload/manage study materials by subject and semester.
+- **Timetable Management:** Dynamic schedule viewing for students.
 
-## Tech Stack
+---
 
-- Frontend: React.js
-- Backend: Node.js, Express.js
-- Database: MongoDB
-- Authentication: JWT
+## 🛠️ Tech Stack
 
-## Prerequisites
+- **Frontend:** React.js, Tailwind CSS (Vanilla styling)
+- **Backend:** Node.js, Express.js
+- **Database:** MongoDB (Mongoose ODM)
+- **Authentication:** JSON Web Tokens (JWT)
+- **File Handling:** Multer (Local disk storage)
+- **Real-time Notifications:** Socket.io
 
-- Node.js
-- MongoDB
-- npm
+---
 
-## Setup Instructions
+## 🚀 Getting Started
 
-Sample .env file is added in both backend and frontend, copy that variables and create `.env` in both the folders and then follow below given instructions
+### Prerequisites
+- Node.js (v16+)
+- MongoDB (Local or Atlas)
+- Git
 
-1. Clone the repository:
+### Installation
 
-```bash
-git clone <repository-url>
-cd College-Management-System
-```
+1. **Clone the Repo**
+   ```bash
+   git clone https://github.com/pradeepyadav92/EduSphere.git
+   cd EduSphere
+   ```
 
-2. Install dependencies:
+2. **Backend Setup**
+   ```bash
+   cd backend
+   npm install
+   # Create .env with MONGODB_URI, JWT_SECRET, and PORT
+   npm run dev
+   ```
 
-```bash
-# Install backend dependencies
-cd backend
-npm install
+3. **Frontend Setup**
+   ```bash
+   cd frontend
+   npm install
+   # Create .env with REACT_APP_BASE_URL (http://localhost:4000/api/)
+   npm start
+   ```
 
-# Install frontend dependencies
-cd ../frontend
-npm install
-```
+4. **Initialize Admin**
+   Run the seeder to create the master account:
+   ```bash
+   cd backend
+   node admin-seeder.js
+   # Use Email: admin@gmail.com / Password: admin123
+   ```
 
-3. Create a `.env` file in the backend directory with the following variables:
+---
 
-```
-MONGODB_URI =mongodb://127.0.0.1:27017/College-Management-System
-PORT = 4000
-FRONTEND_API_LINK = http://localhost:3000
-JWT_SECRET = THISISSECRET
+## 📸 Screenshots
+*(Add your screenshots here to showcase the stunning UI!)*
 
-NODEMAILER_EMAIL =
-NODEMAILER_PASS =
-```
+---
 
-4. Create a `.env` file in the frontend directory:
+## 📄 License
+Distributed under the MIT License. See `LICENSE` for more information.
 
-```env
-REACT_APP_APILINK = http://localhost:4000/api
+---
 
-REACT_APP_MEDIA_LINK = http://localhost:4000/media
-
-```
-
-5. Start the development servers:
-
-```bash
-# Start backend server (from backend directory)
-npm run dev
-
-# Start frontend server (from frontend directory)
-npm start
-```
-
-## Initial Setup
-
-1. Create an admin account using the seeder:
-
-```bash
-cd backend
-npm run seed
-```
-
-This will create a default admin account with the following credentials:
-
-- Employee ID: 123456
-- Password: admin123
-- Email: admin@gmail.com
-
-## Project Structure
-
-```
-college-management-system/
-├── backend/
-│   ├── controllers/
-│   │   ├── models/
-│   │   ├── routes/
-│   │   ├── middlewares/
-│   │   ├── utils/
-│   │   └── media/
-│   └── README.md
-├── frontend/
-│   ├── src/
-│   │   ├── components/
-│   │   ├── pages/
-│   │   ├── context/
-│   │   └── utils/
-│   └── public/
-└── README.md
-```
-
-## For Any Doubt Feel Free To Contact Me 🚀
-
-- [My Website](http://krishjotaniya.netlify.app/)
-- [Linkedin](https://www.linkedin.com/in/krishjotaniya/)
-- [krishjotaniya71@gmail.com](mailto:krishjotaniya71@gmail.com)
-
-## Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request. For major changes, please open an issue first to discuss what you would like to change.
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+## 🤝 Project by
+**Pradeep Yadav** & Team.
+Developed with precision as a comprehensive College Management Solution.

@@ -437,7 +437,7 @@ const checkStatusController = async (req, res) => {
     const application = await StudentApplication.findOne({ email }).populate("branchId");
     
     if (application) {
-      return ApiResponse.success({ status: application.status, branch: application.branchId?.name }, "Application found").send(res);
+      return ApiResponse.success({ status: application.status, branch: application.branchId?.name, remarks: application.remarks }, "Application found").send(res);
     }
 
     // If not in applications, check if already in live student details

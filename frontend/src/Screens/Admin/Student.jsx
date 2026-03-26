@@ -95,7 +95,7 @@ const Student = () => {
   };
 
   const searchStudents = async (e) => {
-    e.preventDefault();
+    if (e && e.preventDefault) e.preventDefault();
 
     if (
       !searchParams.enrollmentNo &&

@@ -82,13 +82,17 @@ const studentApplicationSchema = new mongoose.Schema(
       enum: ["Pending", "Approved", "Rejected"],
       default: "Pending",
     },
+    remarks: {
+      type: String,
+      default: "",
+    },
   },
   { timestamps: true }
 );
 
 studentApplicationSchema.pre("save", async function (next) {
   if (!this.isModified("password")) {
-    next();
+    return next();
   }
   this.password = await bcrypt.hash(this.password, 10);
 });

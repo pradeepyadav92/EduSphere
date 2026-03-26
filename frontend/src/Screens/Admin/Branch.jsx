@@ -51,7 +51,8 @@ const Branch = () => {
     }
   };
 
-  const addBranchHandler = async () => {
+  const addBranchHandler = async (e) => {
+    e.preventDefault();
     if (!data.name || !data.branchId) {
       toast.dismiss();
       toast.error("Please fill all the fields");

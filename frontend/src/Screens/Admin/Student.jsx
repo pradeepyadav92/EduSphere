@@ -3,6 +3,7 @@ import { toast } from "react-hot-toast";
 import { MdOutlineDelete, MdEdit } from "react-icons/md";
 import { IoMdAdd, IoMdClose } from "react-icons/io";
 import { RxDashboard } from "react-icons/rx";
+import { getMediaSource } from "../../utils/MediaHelper";
 import Heading from "../../components/Heading";
 import DeleteConfirm from "../../components/DeleteConfirm";
 import axiosWrapper from "../../utils/AxiosWrapper";
@@ -924,7 +925,7 @@ const StudentViewModal = ({ isOpen, onClose, student }) => {
         <div className="bg-blue-600 p-8 text-white flex justify-between items-start">
           <div className="flex gap-6 items-center">
             <img 
-              src={`${process.env.REACT_APP_MEDIA_LINK}/${student.profile}`} 
+              src={getMediaSource(student.profile)}
               className="w-24 h-24 rounded-2xl object-cover border-4 border-white/20 shadow-lg"
               alt="Profile"
               onError={(e) => e.target.src = "https://images.unsplash.com/photo-1744315900478-fa44dc6a4e89?q=80&w=3087&auto=format&fit=crop"}

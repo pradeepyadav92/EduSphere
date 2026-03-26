@@ -60,7 +60,6 @@ const StudentFinder = () => {
 
   const searchStudents = async (e) => {
     if (e && e.preventDefault) e.preventDefault();
-    e.preventDefault();
     setDataLoading(true);
     setHasSearched(true);
     toast.loading("Searching students...");

@@ -5,7 +5,7 @@ const getMarksController = async (req, res) => {
   try {
     const { studentId, semester, examId } = req.query;
 
-    const query = { student: studentId };
+    const query = { studentId };
     if (semester) {
       query.semester = semester;
     }
@@ -15,9 +15,9 @@ const getMarksController = async (req, res) => {
     }
 
     const marks = await Marks.find(query)
-      .populate("branch", "name")
-      .populate("marks.subject", "name")
-      .populate("student", "firstName lastName enrollmentNo");
+      .populate("subjectId", "name")
+      .populate("examId", "name examType totalMarks")
+      .populate("studentId", "firstName lastName enrollmentNo");
 
     if (!marks || marks.length === 0) {
       return res.status(200).json({
@@ -226,9 +226,9 @@ const getStudentMarksController = async (req, res) => {
     const { semester, id } = req.query;
     const studentId = id || req.userId;
 
-    let query = { studentId };
+    let query = { studentId: studentId };
     if (semester) {
-      query.semester = semester;
+      query.semester = Number(semester);
     }
 
     const marks = await Marks.find(query)

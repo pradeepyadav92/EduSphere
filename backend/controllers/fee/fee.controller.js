@@ -57,7 +57,7 @@ const getAllFees = async (req, res) => {
     if (semester) query.semester = semester;
     if (status) query.status = status;
     if (year) query.year = Number(year);
-    console.log("fee/all query received:", req.query, "built query:", query);
+
 
     const records = await Fee.find(query).populate(
       "student",

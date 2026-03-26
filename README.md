@@ -44,7 +44,8 @@ EduSphere is a robust, production-ready Enterprise Resource Planning (ERP) platf
 - **Backend:** Node.js, Express.js
 - **Database:** MongoDB (Mongoose ODM)
 - **Authentication:** JSON Web Tokens (JWT)
-- **File Handling:** Multer (Local disk storage)
+- **File Handling:** Multer with **Cloudinary Storage** (Production-ready)
+- **Email Notifications:** Nodemailer with HTML Templates
 - **Real-time Notifications:** Socket.io
 
 ---

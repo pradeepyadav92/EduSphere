@@ -3,7 +3,8 @@ const resetToken = require("../../models/reset-password.model");
 const bcrypt = require("bcryptjs");
 const ApiResponse = require("../../utils/ApiResponse");
 const jwt = require("jsonwebtoken");
-const sendResetMail = require("../../utils/SendMail");
+const sendEmail = require("../../utils/SendMail");
+const { getResetPasswordTemplate } = require("../../utils/EmailTemplates");
 
 const loginFacultyController = async (req, res) => {
   try {
@@ -244,7 +245,10 @@ const sendFacultyResetPasswordEmail = async (req, res) => {
       userId: user._id,
     });
 
-    await sendResetMail(user.email, resetId._id, "faculty");
+    // Send reset email
+    const subject = "Password Reset Request";
+    const html = getResetPasswordTemplate("faculty", resetId._id);
+    await sendEmail(user.email, subject, html);
 
     return ApiResponse.success(null, "Reset Mail Sent Successfully").send(res);
   } catch (error) {

@@ -4,7 +4,8 @@ const resetToken = require("../../models/reset-password.model");
 const bcrypt = require("bcryptjs");
 const ApiResponse = require("../../utils/ApiResponse");
 const jwt = require("jsonwebtoken");
-const sendResetMail = require("../../utils/SendMail");
+const sendEmail = require("../../utils/SendMail");
+const { getApprovalTemplate, getRejectionTemplate } = require("../../utils/EmailTemplates");
 
 const loginStudentController = async (req, res) => {
   try {
@@ -278,7 +279,10 @@ const sendForgetPasswordEmail = async (req, res) => {
       userId: user._id,
     });
 
-    await sendResetMail(user.email, resetId._id, "student");
+    // Send reset email
+    const subject = "Password Reset Request";
+    const html = getResetPasswordTemplate("student", resetId._id);
+    await sendEmail(user.email, subject, html);
 
     return ApiResponse.success(null, "Reset Mail Send Successful").send(res);
   } catch (error) {
@@ -531,6 +535,19 @@ const approveApplicationController = async (req, res) => {
 
     await StudentApplication.findByIdAndDelete(id);
 
+    // Send Approval Email
+    try {
+      const subject = "Admission Approved - Welcome to EduSphere!";
+      const html = getApprovalTemplate(
+        `${application.firstName} ${application.lastName}`,
+        rollNo,
+        enrollmentNo
+      );
+      await sendEmail(application.email, subject, html);
+    } catch (emailError) {
+      console.error("Failed to send approval email:", emailError);
+    }
+
     return ApiResponse.success({ rollNo, enrollmentNo }, "Student Approved and Added").send(res);
   } catch (error) {
     console.error("Approve Application Error: ", error);
@@ -541,7 +558,21 @@ const approveApplicationController = async (req, res) => {
 const rejectApplicationController = async (req, res) => {
   try {
     const { id } = req.params;
+    const application = await StudentApplication.findById(id);
+    if (!application) return ApiResponse.notFound("Application not found").send(res);
+
     await StudentApplication.findByIdAndDelete(id);
+    // Send Rejection Email
+    try {
+      const subject = "Admission Application Status";
+      const html = getRejectionTemplate(
+        `${application.firstName} ${application.lastName}`
+      );
+      await sendEmail(application.email, subject, html);
+    } catch (emailError) {
+      console.error("Failed to send rejection email:", emailError);
+    }
+
     return ApiResponse.success(null, "Application Rejected").send(res);
   } catch (error) {
     return ApiResponse.internalServerError().send(res);

@@ -59,7 +59,7 @@ const generateEmployeeId = () => {
 const registerFacultyController = async (req, res) => {
   try {
     const { email, phone } = req.body;
-    const profile = req.file ? req.file.filename : "default.png";
+    const profile = req.file ? req.file.path : "default.png";
 
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       return ApiResponse.badRequest("Invalid email format").send(res);
@@ -165,7 +165,7 @@ const updateFacultyController = async (req, res) => {
     }
 
     if (req.file) {
-      updateData.profile = req.file.filename;
+      updateData.profile = req.file.path;
     }
 
     if (updateData.dob) updateData.dob = new Date(updateData.dob);

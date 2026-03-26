@@ -55,7 +55,7 @@ const addMaterialController = async (req, res) => {
       semester,
       branch,
       type,
-      file: req.file.filename,
+      file: req.file.path,
     });
 
     const populatedMaterial = await Material.findById(material._id)
@@ -105,7 +105,7 @@ const updateMaterialController = async (req, res) => {
       }
       updateData.type = type;
     }
-    if (req.file) updateData.file = req.file.filename;
+    if (req.file) updateData.file = req.file.path;
 
     const updatedMaterial = await Material.findByIdAndUpdate(id, updateData, {
       new: true,

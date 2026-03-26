@@ -5,6 +5,7 @@ import { IoMdAdd, IoMdClose } from "react-icons/io";
 import Heading from "../../components/Heading";
 import { AiOutlineClose } from "react-icons/ai";
 import toast from "react-hot-toast";
+import { getMediaSource } from "../../utils/MediaHelper";
 import axiosWrapper from "../../utils/AxiosWrapper";
 import DeleteConfirm from "../../components/DeleteConfirm";
 import CustomButton from "../../components/CustomButton";
@@ -282,7 +283,7 @@ const Timetable = () => {
                 <td className="py-4 px-6">
                   <a
                     className="text-xl"
-                    href={process.env.REACT_APP_MEDIA_LINK + "/" + item.link}
+                    href={getMediaSource(item.link)}
                     target="_blank"
                     rel="noopener noreferrer"
                   >

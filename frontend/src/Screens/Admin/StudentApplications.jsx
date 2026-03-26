@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import toast from "react-hot-toast";
 import axiosWrapper from "../../utils/AxiosWrapper";
+import { getMediaSource } from "../../utils/MediaHelper";
 import Heading from "../../components/Heading";
 
 const StudentApplications = () => {
@@ -108,7 +109,7 @@ const StudentApplications = () => {
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-4">
                         <img
-                          src={process.env.REACT_APP_MEDIA_LINK + "/" + app.profile}
+                          src={getMediaSource(app.profile)}
                           alt="profile"
                           className="h-10 w-10 rounded-full object-cover border border-gray-200 shadow-sm"
                           onError={(e) => { e.target.src = "https://cdn-icons-png.flaticon.com/512/3135/3135715.png"; }}

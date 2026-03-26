@@ -49,7 +49,7 @@ const addTimetableController = async (req, res) => {
         {
           semester,
           branch,
-          link: req.file.filename,
+          link: req.file.path,
         },
         { new: true }
       );
@@ -62,7 +62,7 @@ const addTimetableController = async (req, res) => {
     timetable = await Timetable.create({
       semester,
       branch,
-      link: req.file.filename,
+      link: req.file.path,
     });
 
     return ApiResponse.created(timetable, "Timetable added successfully").send(
@@ -88,7 +88,7 @@ const updateTimetableController = async (req, res) => {
       {
         semester,
         branch,
-        link: req.file ? req.file.filename : undefined,
+        link: req.file ? req.file.path : undefined,
       },
       { new: true }
     );

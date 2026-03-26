@@ -61,7 +61,7 @@ const getAllDetailsController = async (req, res) => {
 
 const registerStudentController = async (req, res) => {
   try {
-    const profile = req.file ? req.file.filename : "default.png";
+    const profile = req.file ? req.file.path : "default.png";
 
     const enrollmentNo = Math.floor(100000 + Math.random() * 900000);
     const email = `${enrollmentNo}@gmail.com`;
@@ -199,7 +199,7 @@ const updateDetailsController = async (req, res) => {
     }
 
     if (req.file) {
-      updateData.profile = req.file.filename;
+      updateData.profile = req.file.path;
     }
 
     if (updateData.dob) {
@@ -450,7 +450,7 @@ const checkStatusController = async (req, res) => {
 
 const applyStudentController = async (req, res) => {
   try {
-    const profile = req.file ? req.file.filename : "default.png";
+    const profile = req.file ? req.file.path : "default.png";
     
     // Structure emergencyContact if sent as flat fields or bracket notation
     const emergencyContact = {

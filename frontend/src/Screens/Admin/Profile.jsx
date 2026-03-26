@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import UpdatePasswordLoggedIn from "../../components/UpdatePasswordLoggedIn";
+import { getMediaSource } from "../../utils/MediaHelper";
 import CustomButton from "../../components/CustomButton";
 
 const Profile = ({ profileData }) => {
@@ -20,7 +21,7 @@ const Profile = ({ profileData }) => {
       <div className="flex items-center justify-between gap-8 mb-12 border-b pb-8">
         <div className="flex items-center gap-8">
           <img
-            src={`${process.env.REACT_APP_MEDIA_LINK}/${profileData.profile}`}
+            src={getMediaSource(profileData.profile)}
             alt="Profile"
             className="w-40 h-40 rounded-full object-cover ring-4 ring-blue-500 ring-offset-4"
           />

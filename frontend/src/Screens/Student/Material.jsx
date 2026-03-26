@@ -4,6 +4,7 @@ import Heading from "../../components/Heading";
 import { useSelector } from "react-redux";
 import axiosWrapper from "../../utils/AxiosWrapper";
 import toast from "react-hot-toast";
+import { getMediaSource } from "../../utils/MediaHelper";
 import CustomButton from "../../components/CustomButton";
 import Loading from "../../components/Loading";
 
@@ -158,9 +159,7 @@ const Material = () => {
                       <CustomButton
                         variant="primary"
                         onClick={() => {
-                          window.open(
-                            `${process.env.REACT_APP_MEDIA_LINK}/${material.file}`
-                          );
+                          window.open(getMediaSource(material.file));
                         }}
                       >
                         <MdLink className="text-xl" />

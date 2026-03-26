@@ -4,6 +4,7 @@ import Heading from "../../components/Heading";
 import axiosWrapper from "../../utils/AxiosWrapper";
 import CustomButton from "../../components/CustomButton";
 import NoData from "../../components/NoData";
+import { getMediaSource } from "../../utils/MediaHelper";
 
 const StudentFinder = () => {
   const [searchParams, setSearchParams] = useState({

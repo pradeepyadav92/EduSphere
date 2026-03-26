@@ -4,6 +4,7 @@ import { FiUpload, FiEdit2, FiTrash2 } from "react-icons/fi";
 import Heading from "../../components/Heading";
 import { AiOutlineClose } from "react-icons/ai";
 import toast from "react-hot-toast";
+import { getMediaSource } from "../../utils/MediaHelper";
 import axiosWrapper from "../../utils/AxiosWrapper";
 import DeleteConfirm from "../../components/DeleteConfirm";
 import CustomButton from "../../components/CustomButton";
@@ -345,7 +346,7 @@ const Material = () => {
                       variant="primary"
                       onClick={() => {
                         window.open(
-                          `${process.env.REACT_APP_MEDIA_LINK}/${material.file}`
+                          getMediaSource(material.file)
                         );
                       }}
                     >

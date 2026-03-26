@@ -1,0 +1,31 @@
+[
+  {
+    "_id": "69c58af1830dc60b770dbba5",
+    "student": "69c58876830dc60b770dbb66",
+    "amount": 74200,
+    "status": "Paid",
+    "semester": "1",
+    "branch": "CSE",
+    "remarks": "",
+    "date": "2026-03-26T19:37:21.603Z",
+    "createdAt": "2026-03-26T19:37:21.605Z",
+    "updatedAt": "2026-03-26T19:37:21.605Z",
+    "__v": 0
+  },
+  {
+    "_id": "69c5a2d2dbeb2b92165ef5e8",
+    "semester": "1",
+    "student": "69c58876830dc60b770dbb66",
+    "year": 2026,
+    "__v": 0,
+    "branch": "CSE",
+    "createdAt": "2026-03-26T21:19:14.770Z",
+    "date": "2026-03-26T21:19:14.784Z",
+    "paidAmount": 20000,
+    "remainingAmount": 54000,
+    "remarks": "",
+    "status": "Partial",
+    "totalAmount": 74000,
+    "updatedAt": "2026-03-26T21:26:58.584Z"
+  }
+]

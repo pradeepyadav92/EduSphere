@@ -52,101 +52,106 @@ const ViewMarks = () => {
   const putMarks = marks.filter((mark) => mark.examId?.examType === "put");
 
   return (
-    <div className="w-full mx-auto mt-10 flex justify-center items-start flex-col mb-10">
-      <div className="flex justify-between items-center w-full mb-6">
+    <div className="mx-auto flex w-full max-w-7xl flex-col px-3 py-4 md:px-5 md:py-6">
+      <div className="mb-6 flex w-full flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
         <Heading title="View Marks" />
-        <div className="flex items-center gap-4">
-          <label className="text-sm font-medium text-gray-700">Semester:</label>
-          <select
-            value={selectedSemester || ""}
-            onChange={handleSemesterChange}
-            className="px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-          >
-            {[1, 2, 3, 4, 5, 6, 7, 8].map((sem) => (
-              <option key={sem} value={sem}>
-                Semester {sem}
-              </option>
-            ))}
-          </select>
+        <div className="flex items-center gap-4 self-start rounded-[18px] border border-[#dfe8fb] bg-white px-4 py-3 shadow-[0_8px_20px_rgba(37,71,154,0.06)]">
+          <label className="text-sm font-medium text-[#5e7096]">Semester:</label>
+          <div className="relative">
+            <select
+              value={selectedSemester || ""}
+              onChange={handleSemesterChange}
+              className="appearance-none rounded-[14px] border border-[#d8e3fb] bg-[#f5f8ff] px-4 py-2 pr-10 text-sm font-semibold text-[#21439c] outline-none transition focus:border-[#b9ccf8]"
+            >
+              {[1, 2, 3, 4, 5, 6, 7, 8].map((sem) => (
+                <option key={sem} value={sem}>
+                  Semester {sem}
+                </option>
+              ))}
+            </select>
+            <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-xs text-[#6f83b1]">
+              v
+            </span>
+          </div>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 w-full mt-6">
-        <div className="bg-white rounded-lg shadow-md p-6 border-t-4 border-blue-500">
-          <h2 className="text-xl font-semibold mb-4 text-center border-b pb-2">Sessional 1</h2>
+      <div className="mt-6 grid w-full grid-cols-1 gap-6 lg:grid-cols-3">
+        <div className="rounded-[22px] border-l-4 border-l-[#0f8b8d] bg-white p-6 shadow-[0_12px_30px_rgba(37,71,154,0.06)]">
+          <h2 className="mb-4 border-b border-[#edf2ff] pb-3 text-center text-xl font-semibold tracking-[-0.02em] text-[#233d88]">Sessional 1</h2>
           {dataLoading ? (
-            <p className="text-gray-500 text-center">Loading...</p>
+            <p className="text-center text-[#8fa1c5]">Loading...</p>
           ) : sessional1Marks.length > 0 ? (
             <div className="space-y-4">
               {sessional1Marks.map((mark) => (
-                <div key={mark._id} className="border rounded-lg p-4 hover:shadow-md transition-shadow">
+                <div key={mark._id} className="rounded-2xl border border-[#e6ecfc] bg-[#fbfcff] p-4 transition-shadow hover:shadow-md">
                   <div className="flex justify-between items-center">
                     <div>
-                      <p className="font-bold text-gray-800">{mark.subjectId?.name || "Unknown"}</p>
-                      <p className="text-xs text-gray-500 uppercase font-semibold tracking-wider mt-1">{mark.examId?.name || "Exam"}</p>
+                      <p className="font-bold text-[#24365f]">{mark.subjectId?.name || "Unknown"}</p>
+                      <p className="mt-1 text-xs font-semibold uppercase tracking-[0.18em] text-[#97a6c5]">{mark.examId?.name || "Exam"}</p>
                     </div>
                     <div className="text-right">
-                      <p className="text-xl font-black text-blue-600">{mark.marksObtained}</p>
-                      <p className="text-xs text-gray-500 font-medium tracking-wide">out of {mark.examId?.totalMarks || "-"}</p>
+                      <p className="text-xl font-semibold text-[#21439c]">{mark.marksObtained}</p>
+                      <p className="text-xs font-medium tracking-wide text-[#97a6c5]">out of {mark.examId?.totalMarks || "-"}</p>
                     </div>
                   </div>
                 </div>
               ))}
             </div>
           ) : (
-            <p className="text-gray-400 text-center text-sm py-8 font-medium italic">No Sessional 1 marks available.</p>
+            <p className="py-8 text-center text-sm font-medium italic text-[#8fa1c5]">No Sessional 1 marks available.</p>
           )}
         </div>
 
-        <div className="bg-white rounded-lg shadow-md p-6 border-t-4 border-indigo-500">
-          <h2 className="text-xl font-semibold mb-4 text-center border-b pb-2">Sessional 2</h2>
+        <div className="rounded-[22px] border-l-4 border-l-[#2e38ce] bg-white p-6 shadow-[0_12px_30px_rgba(37,71,154,0.06)]">
+          <h2 className="mb-4 border-b border-[#edf2ff] pb-3 text-center text-xl font-semibold tracking-[-0.02em] text-[#233d88]">Sessional 2</h2>
           {dataLoading ? (
-            <p className="text-gray-500 text-center">Loading...</p>
+            <p className="text-center text-[#8fa1c5]">Loading...</p>
           ) : sessional2Marks.length > 0 ? (
             <div className="space-y-4">
               {sessional2Marks.map((mark) => (
-                <div key={mark._id} className="border rounded-lg p-4 hover:shadow-md transition-shadow">
+                <div key={mark._id} className="rounded-2xl border border-[#e6ecfc] bg-[#fbfcff] p-4 transition-shadow hover:shadow-md">
                   <div className="flex justify-between items-center">
                     <div>
-                      <p className="font-bold text-gray-800">{mark.subjectId?.name || "Unknown"}</p>
-                      <p className="text-xs text-gray-500 uppercase font-semibold tracking-wider mt-1">{mark.examId?.name || "Exam"}</p>
+                      <p className="font-bold text-[#24365f]">{mark.subjectId?.name || "Unknown"}</p>
+                      <p className="mt-1 text-xs font-semibold uppercase tracking-[0.18em] text-[#97a6c5]">{mark.examId?.name || "Exam"}</p>
                     </div>
                     <div className="text-right">
-                      <p className="text-xl font-black text-indigo-600">{mark.marksObtained}</p>
-                      <p className="text-xs text-gray-500 font-medium tracking-wide">out of {mark.examId?.totalMarks || "-"}</p>
+                      <p className="text-xl font-semibold text-[#2e38ce]">{mark.marksObtained}</p>
+                      <p className="text-xs font-medium tracking-wide text-[#97a6c5]">out of {mark.examId?.totalMarks || "-"}</p>
                     </div>
                   </div>
                 </div>
               ))}
             </div>
           ) : (
-            <p className="text-gray-400 text-center text-sm py-8 font-medium italic">No Sessional 2 marks available.</p>
+            <p className="py-8 text-center text-sm font-medium italic text-[#8fa1c5]">No Sessional 2 marks available.</p>
           )}
         </div>
 
-        <div className="bg-white rounded-lg shadow-md p-6 border-t-4 border-purple-500">
-          <h2 className="text-xl font-semibold mb-4 text-center border-b pb-2">P-U-T</h2>
+        <div className="rounded-[22px] border-l-4 border-l-[#123d8f] bg-white p-6 shadow-[0_12px_30px_rgba(37,71,154,0.06)]">
+          <h2 className="mb-4 border-b border-[#edf2ff] pb-3 text-center text-xl font-semibold tracking-[-0.02em] text-[#233d88]">P-U-T</h2>
           {dataLoading ? (
-            <p className="text-gray-500 text-center">Loading...</p>
+            <p className="text-center text-[#8fa1c5]">Loading...</p>
           ) : putMarks.length > 0 ? (
             <div className="space-y-4">
               {putMarks.map((mark) => (
-                <div key={mark._id} className="border rounded-lg p-4 hover:shadow-md transition-shadow">
+                <div key={mark._id} className="rounded-2xl border border-[#e6ecfc] bg-[#fbfcff] p-4 transition-shadow hover:shadow-md">
                   <div className="flex justify-between items-center">
                     <div>
-                      <p className="font-bold text-gray-800">{mark.subjectId?.name || "Unknown"}</p>
-                      <p className="text-xs text-gray-500 uppercase font-semibold tracking-wider mt-1">{mark.examId?.name || "Exam"}</p>
+                      <p className="font-bold text-[#24365f]">{mark.subjectId?.name || "Unknown"}</p>
+                      <p className="mt-1 text-xs font-semibold uppercase tracking-[0.18em] text-[#97a6c5]">{mark.examId?.name || "Exam"}</p>
                     </div>
                     <div className="text-right">
-                      <p className="text-xl font-black text-purple-600">{mark.marksObtained}</p>
-                      <p className="text-xs text-gray-500 font-medium tracking-wide">out of {mark.examId?.totalMarks || "-"}</p>
+                      <p className="text-xl font-semibold text-[#123d8f]">{mark.marksObtained}</p>
+                      <p className="text-xs font-medium tracking-wide text-[#97a6c5]">out of {mark.examId?.totalMarks || "-"}</p>
                     </div>
                   </div>
                 </div>
               ))}
             </div>
           ) : (
-            <p className="text-gray-400 text-center text-sm py-8 font-medium italic">No PUT marks available.</p>
+            <p className="py-8 text-center text-sm font-medium italic text-[#8fa1c5]">No PUT marks available.</p>
           )}
         </div>
       </div>

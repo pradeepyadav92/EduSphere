@@ -1,4 +1,3 @@
-import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { getMediaSource } from "../../utils/MediaHelper";
 import { FiDownload } from "react-icons/fi";
@@ -7,6 +6,7 @@ import { useSelector } from "react-redux";
 import axiosWrapper from "../../utils/AxiosWrapper";
 import { toast } from "react-hot-toast";
 import Loading from "../../components/Loading";
+
 const Timetable = () => {
   const [timetable, setTimetable] = useState("");
   const userData = useSelector((state) => state.userData);
@@ -46,33 +46,34 @@ const Timetable = () => {
   }, [userData, userData.branchId, userData.semester]);
 
   return (
-    <div className="w-full mx-auto mt-10 flex justify-center items-start flex-col mb-10">
-      <div className="flex justify-between items-center w-full">
+    <div className="mx-auto flex w-full max-w-7xl flex-col px-3 py-4 md:px-5 md:py-6">
+      <div className="flex w-full items-center justify-between">
         <Heading title={`Timetable of Semester ${userData.semester}`} />
         {!dataLoading && timetable && (
-          <p
-            className="flex justify-center items-center text-lg font-medium cursor-pointer hover:text-red-500 hover:scale-110 ease-linear transition-all duration-200 hover:duration-200 hover:ease-linear hover:transition-all"
-            onClick={() =>
-              window.open(getMediaSource(timetable))
-            }
+          <button
+            type="button"
+            className="flex items-center gap-2 rounded-[14px] border border-[#d8e3fb] bg-white px-4 py-2.5 text-sm font-medium text-[#21439c] shadow-[0_10px_20px_rgba(37,71,154,0.06)] transition hover:bg-[#f6f9ff]"
+            onClick={() => window.open(getMediaSource(timetable))}
           >
-            Download
-            <span className="ml-2">
-              <FiDownload />
-            </span>
-          </p>
+            <FiDownload />
+            <span>Download</span>
+          </button>
         )}
       </div>
       {dataLoading && <Loading />}
       {!dataLoading && timetable && (
-        <img
-          className="mt-8 rounded-lg shadow-md w-[70%] mx-auto"
-          src={getMediaSource(timetable)}
-          alt="timetable"
-        />
+        <div className="mt-8 overflow-hidden rounded-[22px] border border-[#e1e9fc] bg-white p-5 shadow-[0_12px_30px_rgba(37,71,154,0.06)]">
+          <img
+            className="mx-auto w-full max-w-4xl rounded-[16px] border border-[#edf2ff]"
+            src={getMediaSource(timetable)}
+            alt="timetable"
+          />
+        </div>
       )}
       {!dataLoading && !timetable && (
-        <p className="mt-10">No Timetable Available At The Moment!</p>
+        <div className="mt-8 rounded-[22px] border border-dashed border-[#d8e3fb] bg-white px-6 py-10 text-center text-sm font-medium text-[#8fa1c5] shadow-[0_12px_30px_rgba(37,71,154,0.06)]">
+          No timetable available at the moment.
+        </div>
       )}
     </div>
   );

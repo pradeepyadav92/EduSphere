@@ -33,7 +33,6 @@ const Material = () => {
     branch: "",
     type: "",
   });
-  const [error, setError] = useState(null);
 
   useEffect(() => {
     fetchSubjects();
@@ -230,144 +229,121 @@ const Material = () => {
     }
   };
 
+  const SelectBox = ({ name, value, onChange, children }) => (
+    <div className="relative">
+      <select
+        name={name}
+        value={value}
+        onChange={onChange}
+        className="w-full appearance-none rounded-[16px] border border-gray-200 bg-gray-50 px-4 py-3 pr-10 text-sm text-gray-700 outline-none focus:border-blue-300"
+      >
+        {children}
+      </select>
+      <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-400">v</span>
+    </div>
+  );
+
   return (
-    <div className="w-full mx-auto mt-10 flex justify-center items-start flex-col mb-10">
-      <div className="flex justify-between items-center w-full">
+    <div className="mx-auto flex w-full max-w-7xl flex-col px-3 py-4 md:px-5 md:py-6">
+      <div className="flex w-full items-center justify-between">
         <Heading title="Material Management" />
-        <CustomButton onClick={() => setShowModal(true)}>
+        <CustomButton onClick={() => setShowModal(true)} className="rounded-[14px] bg-blue-600 px-4 py-2.5 font-medium text-white shadow-[0_10px_20px_rgba(37,99,235,0.18)] hover:bg-blue-700">
           <IoMdAdd className="text-2xl" />
         </CustomButton>
       </div>
 
-      {/* Filters */}
-      <div className="w-full mt-4">
-        <div className="grid grid-cols-4 gap-4">
+      <div className="mt-4 w-full rounded-[22px] border border-gray-200 bg-white p-5 shadow-[0_12px_30px_rgba(37,71,154,0.06)]">
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Filter by Subject
-            </label>
-            <select
-              name="subject"
-              value={filters.subject}
-              onChange={handleFilterChange}
-              className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            >
+            <label className="mb-2 block text-xs font-medium uppercase tracking-[0.16em] text-gray-500">Filter by Subject</label>
+            <SelectBox name="subject" value={filters.subject} onChange={handleFilterChange}>
               <option value="">All Subjects</option>
               {subjects.map((subject) => (
-                <option key={subject._id} value={subject._id}>
-                  {subject.name}
-                </option>
+                <option key={subject._id} value={subject._id}>{subject.name}</option>
               ))}
-            </select>
+            </SelectBox>
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Filter by Branch
-            </label>
-            <select
-              name="branch"
-              value={filters.branch}
-              onChange={handleFilterChange}
-              className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            >
+            <label className="mb-2 block text-xs font-medium uppercase tracking-[0.16em] text-gray-500">Filter by Branch</label>
+            <SelectBox name="branch" value={filters.branch} onChange={handleFilterChange}>
               <option value="">All Branches</option>
               {branches.map((branch) => (
-                <option key={branch._id} value={branch._id}>
-                  {branch.name}
-                </option>
+                <option key={branch._id} value={branch._id}>{branch.name}</option>
               ))}
-            </select>
+            </SelectBox>
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Filter by Semester
-            </label>
-            <select
-              name="semester"
-              value={filters.semester}
-              onChange={handleFilterChange}
-              className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            >
+            <label className="mb-2 block text-xs font-medium uppercase tracking-[0.16em] text-gray-500">Filter by Semester</label>
+            <SelectBox name="semester" value={filters.semester} onChange={handleFilterChange}>
               <option value="">All Semesters</option>
               {[1, 2, 3, 4, 5, 6, 7, 8].map((sem) => (
-                <option key={sem} value={sem}>
-                  Semester {sem}
-                </option>
+                <option key={sem} value={sem}>Semester {sem}</option>
               ))}
-            </select>
+            </SelectBox>
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Filter by Type
-            </label>
-            <select
-              name="type"
-              value={filters.type}
-              onChange={handleFilterChange}
-              className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            >
+            <label className="mb-2 block text-xs font-medium uppercase tracking-[0.16em] text-gray-500">Filter by Type</label>
+            <SelectBox name="type" value={filters.type} onChange={handleFilterChange}>
               <option value="">All Types</option>
               <option value="notes">Notes</option>
               <option value="assignment">Assignment</option>
               <option value="syllabus">Syllabus</option>
               <option value="other">Other</option>
-            </select>
+            </SelectBox>
           </div>
         </div>
       </div>
 
-      {/* Materials Table */}
-      <div className="w-full mt-8 overflow-x-auto">
+      <div className="mt-8 w-full overflow-hidden rounded-[22px] border border-gray-200 bg-white shadow-[0_12px_30px_rgba(37,71,154,0.06)]">
         {materials.length === 0 ? (
-          <div className="text-center py-8 text-gray-500">
-            No materials found
-          </div>
+          <div className="py-10 text-center text-gray-500">No materials found</div>
         ) : (
-          <table className="text-sm min-w-full bg-white">
+          <table className="min-w-full text-sm">
             <thead>
-              <tr className="bg-blue-500 text-white">
-                <th className="py-4 px-6 text-left font-semibold">File</th>
-                <th className="py-4 px-6 text-left font-semibold">Title</th>
-                <th className="py-4 px-6 text-left font-semibold">Subject</th>
-                <th className="py-4 px-6 text-left font-semibold">Semester</th>
-                <th className="py-4 px-6 text-left font-semibold">Branch</th>
-                <th className="py-4 px-6 text-left font-semibold">Type</th>
-                <th className="py-4 px-6 text-left font-semibold">Actions</th>
+              <tr className="bg-[#123d8f] text-white">
+                <th className="px-6 py-4 text-left font-semibold">File</th>
+                <th className="px-6 py-4 text-left font-semibold">Title</th>
+                <th className="px-6 py-4 text-left font-semibold">Subject</th>
+                <th className="px-6 py-4 text-left font-semibold">Semester</th>
+                <th className="px-6 py-4 text-left font-semibold">Branch</th>
+                <th className="px-6 py-4 text-left font-semibold">Type</th>
+                <th className="px-6 py-4 text-left font-semibold">Actions</th>
               </tr>
             </thead>
             <tbody>
               {materials.map((material) => (
-                <tr key={material._id} className="border-b hover:bg-blue-50">
-                  <td className="py-4 px-6">
+                <tr key={material._id} className="border-b border-gray-100 hover:bg-blue-50/40">
+                  <td className="px-6 py-4">
                     <CustomButton
                       variant="primary"
+                      className="rounded-[14px] bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
                       onClick={() => {
-                        window.open(
-                          getMediaSource(material.file)
-                        );
+                        window.open(getMediaSource(material.file));
                       }}
                     >
                       <MdLink className="text-xl" />
                     </CustomButton>
                   </td>
-                  <td className="py-4 px-6">{material.title}</td>
-                  <td className="py-4 px-6">{material.subject.name}</td>
-                  <td className="py-4 px-6">{material.semester}</td>
-                  <td className="py-4 px-6">{material.branch.name}</td>
-                  <td className="py-4 px-6 capitalize">{material.type}</td>
-                  <td className="py-4 px-6">
-                    <div className="flex gap-4">
+                  <td className="px-6 py-4 text-gray-700">{material.title}</td>
+                  <td className="px-6 py-4 text-gray-700">{material.subject.name}</td>
+                  <td className="px-6 py-4 text-gray-700">{material.semester}</td>
+                  <td className="px-6 py-4 text-gray-700">{material.branch.name}</td>
+                  <td className="px-6 py-4 capitalize text-gray-700">{material.type}</td>
+                  <td className="px-6 py-4">
+                    <div className="flex gap-3">
                       <CustomButton
                         variant="secondary"
+                        className="rounded-[14px] border border-gray-200 bg-white px-4 py-2 text-gray-600 hover:bg-gray-50"
                         onClick={() => handleEdit(material)}
                       >
                         <FiEdit2 />
                       </CustomButton>
                       <CustomButton
                         variant="danger"
+                        className="rounded-[14px] bg-red-500 px-4 py-2 text-white hover:bg-red-600"
                         onClick={() => {
                           setSelectedMaterialId(material._id);
                           setIsDeleteConfirmOpen(true);
@@ -384,12 +360,11 @@ const Material = () => {
         )}
       </div>
 
-      {/* Add/Edit Material Modal */}
       {showModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-lg p-6 max-w-2xl w-full">
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-xl font-semibold">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+          <div className="w-full max-w-2xl rounded-[22px] bg-white p-6 shadow-[0_30px_70px_rgba(15,23,42,0.18)]">
+            <div className="mb-4 flex items-center justify-between">
+              <h2 className="text-xl font-semibold text-gray-900">
                 {editingMaterial ? "Edit Material" : "Add New Material"}
               </h2>
               <CustomButton
@@ -398,6 +373,7 @@ const Material = () => {
                   resetForm();
                 }}
                 variant="secondary"
+                className="rounded-[14px] border border-gray-200 bg-gray-50 px-3 py-2 text-gray-600 hover:bg-gray-100"
               >
                 <AiOutlineClose size={24} />
               </CustomButton>
@@ -405,106 +381,64 @@ const Material = () => {
 
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Title
-                </label>
+                <label className="mb-2 block text-xs font-medium uppercase tracking-[0.16em] text-gray-500">Title</label>
                 <input
                   type="text"
                   name="title"
                   value={formData.title}
                   onChange={handleInputChange}
-                  className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full rounded-[16px] border border-gray-200 bg-gray-50 px-4 py-3 text-sm text-gray-700 outline-none focus:border-blue-300"
                   required
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Subject
-                  </label>
-                  <select
-                    name="subject"
-                    value={formData.subject}
-                    onChange={handleInputChange}
-                    className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    required
-                  >
+                  <label className="mb-2 block text-xs font-medium uppercase tracking-[0.16em] text-gray-500">Subject</label>
+                  <SelectBox name="subject" value={formData.subject} onChange={handleInputChange}>
                     <option value="">Select Subject</option>
                     {subjects.map((subject) => (
-                      <option key={subject._id} value={subject._id}>
-                        {subject.name}
-                      </option>
+                      <option key={subject._id} value={subject._id}>{subject.name}</option>
                     ))}
-                  </select>
+                  </SelectBox>
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Branch
-                  </label>
-                  <select
-                    name="branch"
-                    value={formData.branch}
-                    onChange={handleInputChange}
-                    className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    required
-                  >
+                  <label className="mb-2 block text-xs font-medium uppercase tracking-[0.16em] text-gray-500">Branch</label>
+                  <SelectBox name="branch" value={formData.branch} onChange={handleInputChange}>
                     <option value="">Select Branch</option>
                     {branches.map((branch) => (
-                      <option key={branch._id} value={branch._id}>
-                        {branch.name}
-                      </option>
+                      <option key={branch._id} value={branch._id}>{branch.name}</option>
                     ))}
-                  </select>
+                  </SelectBox>
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Semester
-                  </label>
-                  <select
-                    name="semester"
-                    value={formData.semester}
-                    onChange={handleInputChange}
-                    className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    required
-                  >
+                  <label className="mb-2 block text-xs font-medium uppercase tracking-[0.16em] text-gray-500">Semester</label>
+                  <SelectBox name="semester" value={formData.semester} onChange={handleInputChange}>
                     <option value="">Select Semester</option>
                     {[1, 2, 3, 4, 5, 6, 7, 8].map((sem) => (
-                      <option key={sem} value={sem}>
-                        Semester {sem}
-                      </option>
+                      <option key={sem} value={sem}>Semester {sem}</option>
                     ))}
-                  </select>
+                  </SelectBox>
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Type
-                  </label>
-                  <select
-                    name="type"
-                    value={formData.type}
-                    onChange={handleInputChange}
-                    className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    required
-                  >
+                  <label className="mb-2 block text-xs font-medium uppercase tracking-[0.16em] text-gray-500">Type</label>
+                  <SelectBox name="type" value={formData.type} onChange={handleInputChange}>
                     <option value="notes">Notes</option>
                     <option value="assignment">Assignment</option>
                     <option value="syllabus">Syllabus</option>
                     <option value="other">Other</option>
-                  </select>
+                  </SelectBox>
                 </div>
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Material File
-                </label>
+                <label className="mb-2 block text-xs font-medium uppercase tracking-[0.16em] text-gray-500">Material File</label>
                 <div className="flex items-center space-x-4">
-                  <label className="flex-1 px-4 py-2 border rounded-md cursor-pointer hover:bg-gray-50">
-                    <span className="flex items-center justify-center">
+                  <label className="flex-1 cursor-pointer rounded-[16px] border border-gray-200 bg-gray-50 px-4 py-3 hover:bg-gray-100">
+                    <span className="flex items-center justify-center text-sm text-gray-700">
                       <FiUpload className="mr-2" />
                       {file ? file.name : "Choose File"}
                     </span>
@@ -519,7 +453,7 @@ const Material = () => {
                     <CustomButton
                       onClick={() => setFile(null)}
                       variant="danger"
-                      className="!p-2"
+                      className="rounded-[14px] bg-red-500 px-3 py-2 text-white hover:bg-red-600"
                     >
                       <AiOutlineClose size={20} />
                     </CustomButton>
@@ -527,17 +461,22 @@ const Material = () => {
                 </div>
               </div>
 
-              <div className="flex justify-end space-x-4 mt-6">
+              <div className="mt-6 flex justify-end space-x-4">
                 <CustomButton
                   onClick={() => {
                     setShowModal(false);
                     resetForm();
                   }}
                   variant="secondary"
+                  className="rounded-[14px] border border-gray-200 bg-white px-5 py-2.5 text-gray-600 hover:bg-gray-50"
                 >
                   Cancel
                 </CustomButton>
-                <CustomButton type="submit" disabled={dataLoading}>
+                <CustomButton
+                  type="submit"
+                  disabled={dataLoading}
+                  className="rounded-[14px] bg-blue-600 px-5 py-2.5 text-white hover:bg-blue-700"
+                >
                   {dataLoading
                     ? "Processing..."
                     : editingMaterial

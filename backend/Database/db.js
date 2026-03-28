@@ -6,7 +6,7 @@ const connectToMongo = () => {
   return mongoose
     .connect(mongoURI, {
       serverSelectionTimeoutMS: 30000,
-      socketTimeoutMS: 45000,
+      // socketTimeoutMS: 45000,
     })
     .then(() => {
       console.log("Connected to MongoDB Successfully");

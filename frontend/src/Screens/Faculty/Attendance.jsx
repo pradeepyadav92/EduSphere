@@ -129,117 +129,116 @@ const Attendance = () => {
     if (selectedBranch) fetchSubjects();
   }, [selectedBranch]);
 
+  const SelectField = ({ label, name, disabled = false, children }) => (
+    <div className="space-y-2">
+      <label className="ml-1 text-xs font-medium uppercase tracking-[0.16em] text-gray-500">{label}</label>
+      <div className="relative">
+        <select
+          name={name}
+          disabled={disabled}
+          onChange={handleInputChange}
+          className="w-full appearance-none rounded-[16px] border border-gray-200 bg-gray-50 px-4 py-3 pr-10 text-sm text-gray-700 outline-none transition-all focus:border-blue-300 disabled:cursor-not-allowed disabled:bg-gray-100"
+        >
+          {children}
+        </select>
+        <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-400">v</span>
+      </div>
+    </div>
+  );
+
   return (
-    <div className="w-full mx-auto mt-10 mb-20 px-4">
+    <div className="mx-auto w-full max-w-7xl px-3 py-4 md:px-5 md:py-6">
       <Heading title="Mark Attendance" />
 
       {showSearch ? (
-        <div className="bg-white p-8 rounded-3xl shadow-xl border border-gray-100 max-w-4xl mx-auto space-y-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="mx-auto max-w-5xl space-y-8 rounded-[22px] border border-gray-200 bg-white p-8 shadow-[0_12px_30px_rgba(37,71,154,0.06)]">
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
             <div className="space-y-2">
-              <label className="text-sm font-bold text-gray-700 ml-1">Date</label>
+              <label className="ml-1 text-xs font-medium uppercase tracking-[0.16em] text-gray-500">Date</label>
               <input
                 type="date"
                 name="date"
                 value={selectedDate}
                 onChange={handleInputChange}
-                className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition-all"
+                className="w-full rounded-[16px] border border-gray-200 bg-gray-50 px-4 py-3 text-sm text-gray-700 outline-none transition-all focus:border-blue-300"
               />
             </div>
-            <div className="space-y-2">
-              <label className="text-sm font-bold text-gray-700 ml-1">Semester</label>
-              <select
-                name="semester"
-                onChange={handleInputChange}
-                className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition-all cursor-pointer"
-              >
-                <option value="">Select Semester</option>
-                {[1, 2, 3, 4, 5, 6, 7, 8].map((s) => (
-                  <option key={s} value={s}>Semester {s}</option>
-                ))}
-              </select>
-            </div>
-            <div className="space-y-2">
-              <label className="text-sm font-bold text-gray-700 ml-1">Branch</label>
-              <select
-                name="branch"
-                onChange={handleInputChange}
-                className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition-all cursor-pointer"
-              >
-                <option value="">Select Branch</option>
-                {branches.map((b) => (
-                  <option key={b._id} value={b._id}>{b.name}</option>
-                ))}
-              </select>
-            </div>
-            <div className="space-y-2">
-              <label className="text-sm font-bold text-gray-700 ml-1">Subject</label>
-              <select
-                name="subject"
-                disabled={!selectedBranch}
-                onChange={handleInputChange}
-                className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition-all cursor-pointer disabled:bg-gray-50 disabled:cursor-not-allowed"
-              >
-                <option value="">Select Subject</option>
-                {subjects.map((s) => (
-                  <option key={s._id} value={s._id}>{s.name}</option>
-                ))}
-              </select>
-            </div>
+
+            <SelectField label="Semester" name="semester">
+              <option value="">Select Semester</option>
+              {[1, 2, 3, 4, 5, 6, 7, 8].map((s) => (
+                <option key={s} value={s}>Semester {s}</option>
+              ))}
+            </SelectField>
+
+            <SelectField label="Branch" name="branch">
+              <option value="">Select Branch</option>
+              {branches.map((b) => (
+                <option key={b._id} value={b._id}>{b.name}</option>
+              ))}
+            </SelectField>
+
+            <SelectField label="Subject" name="subject" disabled={!selectedBranch}>
+              <option value="">Select Subject</option>
+              {subjects.map((s) => (
+                <option key={s._id} value={s._id}>{s.name}</option>
+              ))}
+            </SelectField>
           </div>
+
           <div className="flex justify-center pt-4">
             <CustomButton
               onClick={searchStudents}
               disabled={!selectedBranch || !selectedSemester || dataLoading}
-              className="px-12 py-4 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-2xl shadow-lg shadow-blue-600/20 transition-all transform active:scale-95"
+              className="rounded-[16px] bg-blue-600 px-12 py-3 font-medium text-white shadow-[0_12px_24px_rgba(37,99,235,0.18)] hover:bg-blue-700"
             >
               Get Student List
             </CustomButton>
           </div>
         </div>
       ) : (
-        <div className="bg-white rounded-3xl shadow-2xl border border-gray-100 overflow-hidden max-w-6xl mx-auto">
-          <div className="p-6 bg-gray-50 border-b flex justify-between items-center">
+        <div className="mx-auto max-w-6xl overflow-hidden rounded-[22px] border border-gray-200 bg-white shadow-[0_12px_30px_rgba(37,71,154,0.06)]">
+          <div className="flex items-center justify-between border-b border-gray-200 bg-gray-50 p-6">
             <div className="space-y-1">
-              <h3 className="font-bold text-gray-900">{selectedSubject?.name || "Day-wise Attendance"}</h3>
+              <h3 className="font-semibold text-gray-800">{selectedSubject?.name || "Day-wise Attendance"}</h3>
               <p className="text-sm text-gray-500">
-                Semester {selectedSemester} â€¢ {selectedBranch?.name} â€¢ {new Date(selectedDate).toLocaleDateString()}
+                Semester {selectedSemester} • {selectedBranch?.name} • {new Date(selectedDate).toLocaleDateString()}
               </p>
             </div>
             <CustomButton
               onClick={() => setShowSearch(true)}
-              className="text-sm py-2 px-4 bg-white border border-gray-200 text-gray-600 hover:bg-gray-50"
+              className="rounded-[14px] border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-600 hover:bg-gray-50"
             >
               Change Selection
             </CustomButton>
           </div>
           <div className="overflow-x-auto">
             <table className="w-full text-left">
-              <thead className="bg-gray-50/50 text-gray-500 uppercase text-xs font-bold tracking-wider">
+              <thead className="bg-[#123d8f] text-xs font-bold uppercase tracking-[0.18em] text-white/90">
                 <tr>
                   <th className="px-8 py-4">Enrollment No</th>
                   <th className="px-8 py-4">Student Name</th>
                   <th className="px-8 py-4 text-center">Status</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-100 italic">
+              <tbody className="divide-y divide-gray-100">
                 {students.map((student) => (
-                  <tr key={student._id} className="hover:bg-blue-50/30 transition-colors">
+                  <tr key={student._id} className="transition-colors hover:bg-blue-50/40">
                     <td className="px-8 py-5 font-medium text-gray-900">{student.rollNo || student.enrollmentNo}</td>
-                    <td className="px-8 py-5 text-gray-700 font-bold uppercase tracking-tight">{student.firstName} {student.lastName}</td>
+                    <td className="px-8 py-5 font-semibold text-gray-700">{student.firstName} {student.lastName}</td>
                     <td className="px-8 py-5">
                       <div className="flex justify-center gap-4">
                         {["Present", "Absent", "Late"].map((status) => (
                           <label
                             key={status}
-                            className={`flex items-center gap-2 px-4 py-2 rounded-xl cursor-pointer transition-all border ${
+                            className={`flex cursor-pointer items-center gap-2 rounded-[14px] border px-4 py-2 transition-all ${
                               attendanceData[student._id] === status
-                                ? status === "Present" 
-                                  ? "bg-emerald-50 border-emerald-500 text-emerald-700" 
-                                  : status === "Absent" 
-                                    ? "bg-rose-50 border-rose-500 text-rose-700"
-                                    : "bg-amber-50 border-amber-500 text-amber-700"
-                                : "bg-white border-gray-200 text-gray-400 hover:border-blue-400"
+                                ? status === "Present"
+                                  ? "border-emerald-500 bg-emerald-50 text-emerald-700"
+                                  : status === "Absent"
+                                  ? "border-rose-500 bg-rose-50 text-rose-700"
+                                  : "border-amber-500 bg-amber-50 text-amber-700"
+                                : "border-gray-200 bg-white text-gray-400 hover:border-blue-400"
                             }`}
                           >
                             <input
@@ -250,7 +249,7 @@ const Attendance = () => {
                               onChange={() => setAttendanceData({ ...attendanceData, [student._id]: status })}
                               className="hidden"
                             />
-                            <span className="text-xs font-bold uppercase tracking-wide">{status}</span>
+                            <span className="text-xs font-semibold uppercase tracking-[0.12em]">{status}</span>
                           </label>
                         ))}
                       </div>
@@ -260,11 +259,11 @@ const Attendance = () => {
               </tbody>
             </table>
           </div>
-          <div className="p-8 border-t bg-gray-50 flex justify-center">
+          <div className="flex justify-center border-t border-gray-200 bg-gray-50 p-8">
             <CustomButton
               onClick={handleSubmit}
               disabled={dataLoading}
-              className="px-16 py-4 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-2xl shadow-xl shadow-blue-600/30 transition-all transform active:scale-95"
+              className="rounded-[16px] bg-blue-600 px-16 py-3 font-medium text-white shadow-[0_12px_24px_rgba(37,99,235,0.2)] hover:bg-blue-700"
             >
               Submit Attendance
             </CustomButton>

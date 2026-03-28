@@ -92,47 +92,57 @@ const Material = () => {
   };
 
   return (
-    <div className="w-full mx-auto mt-10 flex justify-center items-start flex-col mb-10">
+    <div className="mx-auto flex w-full max-w-7xl flex-col px-3 py-4 md:px-5 md:py-6">
       <Heading title="Study Materials" />
 
       {!dataLoading && (
-        <div className="w-full mt-4">
-          <div className="grid grid-cols-4 gap-4">
+        <div className="mt-4 w-full rounded-[22px] border border-[#dfe8fb] bg-white p-5 shadow-[0_12px_30px_rgba(37,71,154,0.06)]">
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="mb-2 block text-xs font-bold uppercase tracking-[0.2em] text-[#95a3c4]">
                 Filter by Subject
               </label>
-              <select
-                name="subject"
-                value={filters.subject}
-                onChange={handleFilterChange}
-                className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              >
-                <option value="">All Subjects</option>
-                {subjects.map((subject) => (
-                  <option key={subject._id} value={subject._id}>
-                    {subject.name}
-                  </option>
-                ))}
-              </select>
+              <div className="relative">
+                <select
+                  name="subject"
+                  value={filters.subject}
+                  onChange={handleFilterChange}
+                  className="w-full appearance-none rounded-[16px] border border-[#d8e3fb] bg-[#f5f8ff] px-4 py-3 pr-10 text-sm font-medium text-[#21439c] outline-none transition focus:border-[#b9ccf8]"
+                >
+                  <option value="">All Subjects</option>
+                  {subjects.map((subject) => (
+                    <option key={subject._id} value={subject._id}>
+                      {subject.name}
+                    </option>
+                  ))}
+                </select>
+                <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-xs text-[#6f83b1]">
+                  v
+                </span>
+              </div>
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="mb-2 block text-xs font-bold uppercase tracking-[0.2em] text-[#95a3c4]">
                 Filter by Type
               </label>
-              <select
-                name="type"
-                value={filters.type}
-                onChange={handleFilterChange}
-                className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              >
-                <option value="">All Types</option>
-                <option value="notes">Notes</option>
-                <option value="assignment">Assignment</option>
-                <option value="syllabus">Syllabus</option>
-                <option value="other">Other</option>
-              </select>
+              <div className="relative">
+                <select
+                  name="type"
+                  value={filters.type}
+                  onChange={handleFilterChange}
+                  className="w-full appearance-none rounded-[16px] border border-[#d8e3fb] bg-[#f5f8ff] px-4 py-3 pr-10 text-sm font-medium text-[#21439c] outline-none transition focus:border-[#b9ccf8]"
+                >
+                  <option value="">All Types</option>
+                  <option value="notes">Notes</option>
+                  <option value="assignment">Assignment</option>
+                  <option value="syllabus">Syllabus</option>
+                  <option value="other">Other</option>
+                </select>
+                <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-xs text-[#6f83b1]">
+                  v
+                </span>
+              </div>
             </div>
           </div>
         </div>
@@ -141,10 +151,10 @@ const Material = () => {
       {dataLoading && <Loading />}
 
       {!dataLoading && (
-        <div className="w-full mt-8 overflow-x-auto">
-          <table className="text-sm min-w-full bg-white">
+        <div className="mt-8 w-full overflow-hidden rounded-[22px] border border-[#e1e9fc] bg-white shadow-[0_12px_30px_rgba(37,71,154,0.06)]">
+          <table className="min-w-full text-sm">
             <thead>
-              <tr className="bg-blue-500 text-white">
+              <tr className="bg-[#123d8f] text-white">
                 <th className="py-4 px-6 text-left font-semibold">File</th>
                 <th className="py-4 px-6 text-left font-semibold">Title</th>
                 <th className="py-4 px-6 text-left font-semibold">Subject</th>
@@ -154,10 +164,11 @@ const Material = () => {
             <tbody>
               {materials && materials.length > 0 ? (
                 materials.map((material) => (
-                  <tr key={material._id} className="border-b hover:bg-blue-50">
+                  <tr key={material._id} className="border-b border-[#edf2ff] hover:bg-[#f7faff]">
                     <td className="py-4 px-6">
                       <CustomButton
                         variant="primary"
+                        className="rounded-[14px] bg-[#21439c] px-4 py-2 shadow-[0_10px_20px_rgba(33,67,156,0.16)] hover:bg-[#18357f]"
                         onClick={() => {
                           window.open(getMediaSource(material.file));
                         }}
@@ -172,7 +183,7 @@ const Material = () => {
                 ))
               ) : (
                 <tr>
-                  <td colSpan="4" className="text-center text-base pt-10">
+                  <td colSpan="4" className="pt-10 pb-10 text-center text-base text-[#8fa1c5]">
                     No materials found.
                   </td>
                 </tr>

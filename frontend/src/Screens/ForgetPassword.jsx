@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
 import axiosWrapper from "../utils/AxiosWrapper";
 import CustomButton from "../components/CustomButton";
+import { getValidStoredSession } from "../utils/auth";
 
 const USER_TYPES = {
   STUDENT: "Student",
@@ -30,15 +31,16 @@ const UserTypeSelector = ({ selected, onSelect }) => (
 
 const ForgetPassword = () => {
   const navigate = useNavigate();
-  const userToken = localStorage.getItem("userToken");
   const [selected, setSelected] = useState(USER_TYPES.STUDENT);
   const [email, setEmail] = useState("");
 
   useEffect(() => {
-    if (userToken) {
-      navigate(`/${localStorage.getItem("userType")}`);
+    const session = getValidStoredSession();
+
+    if (session) {
+      navigate(`/${session.userType.toLowerCase()}`);
     }
-  }, [userToken, navigate]);
+  }, [navigate]);
 
   const onSubmit = async (e) => {
     e.preventDefault();

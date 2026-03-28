@@ -72,7 +72,16 @@ const registerAdminController = async (req, res, next) => {
   try {
     const { email, phone } = req.body;
 
-    const profile = req.file ? req.file.path : "default.png";
+    let profile = "default.png";
+    if (req.file) {
+      if (req.file.path && req.file.path.startsWith("http")) {
+        profile = req.file.path;
+      } else if (req.file.filename) {
+        profile = `/media/uploads/${req.file.filename}`;
+      } else {
+        profile = req.file.path;
+      }
+    }
 
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       return ApiResponse.badRequest("Invalid email format").send(res);
@@ -180,7 +189,13 @@ const updateDetailsController = async (req, res, next) => {
     }
 
     if (req.file) {
-      updateData.profile = req.file.path;
+      if (req.file.path && req.file.path.startsWith("http")) {
+        updateData.profile = req.file.path;
+      } else if (req.file.filename) {
+        updateData.profile = `/media/uploads/${req.file.filename}`;
+      } else {
+        updateData.profile = req.file.path;
+      }
     }
 
     if (updateData.dob) {

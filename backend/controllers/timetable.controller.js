@@ -49,7 +49,9 @@ const addTimetableController = async (req, res) => {
         {
           semester,
           branch,
-          link: req.file.path,
+          link: (req.file && req.file.path && req.file.path.startsWith("http")) 
+            ? req.file.path 
+            : (req.file && req.file.filename ? `/media/uploads/${req.file.filename}` : (req.file ? req.file.path : undefined)),
         },
         { new: true }
       );
@@ -59,10 +61,21 @@ const addTimetableController = async (req, res) => {
       ).send(res);
     }
 
+    let filePath;
+    if (req.file) {
+      if (req.file.path && req.file.path.startsWith("http")) {
+        filePath = req.file.path;
+      } else if (req.file.filename) {
+        filePath = `/media/uploads/${req.file.filename}`;
+      } else {
+        filePath = req.file.path;
+      }
+    }
+
     timetable = await Timetable.create({
       semester,
       branch,
-      link: req.file.path,
+      link: filePath,
     });
 
     return ApiResponse.created(timetable, "Timetable added successfully").send(
@@ -88,7 +101,9 @@ const updateTimetableController = async (req, res) => {
       {
         semester,
         branch,
-        link: req.file ? req.file.path : undefined,
+        link: (req.file && req.file.path && req.file.path.startsWith("http")) 
+          ? req.file.path 
+          : (req.file && req.file.filename ? `/media/uploads/${req.file.filename}` : (req.file ? req.file.path : undefined)),
       },
       { new: true }
     );

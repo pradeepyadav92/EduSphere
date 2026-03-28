@@ -10,7 +10,6 @@ import axiosWrapper from "../../utils/AxiosWrapper";
 import CustomButton from "../../components/CustomButton";
 import NoData from "../../components/NoData";
 import { CgDanger } from "react-icons/cg";
-import { getMediaSource } from "../../utils/MediaHelper";
 
 const Student = () => {
   const [searchParams, setSearchParams] = useState({

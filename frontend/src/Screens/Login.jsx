@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { FiLogIn, FiMail, FiLock, FiChevronLeft, FiEye, FiEyeOff } from "react-icons/fi";
-import axios from "axios";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
 import { setUserToken } from "../redux/actions";
 import { useDispatch } from "react-redux";
 import CustomButton from "../components/CustomButton";
 import axiosWrapper from "../utils/AxiosWrapper";
+import { clearStoredSession, getValidStoredSession } from "../utils/auth";
 import { RxDashboard } from "react-icons/rx";
 
 const USER_TYPES = {
@@ -154,6 +154,7 @@ const Login = () => {
       );
 
       const { token } = response.data.data;
+      clearStoredSession();
       localStorage.setItem("userToken", token);
       localStorage.setItem("userType", selected);
       dispatch(setUserToken(token));
@@ -166,9 +167,10 @@ const Login = () => {
   };
 
   useEffect(() => {
-    const userToken = localStorage.getItem("userToken");
-    if (userToken) {
-      navigate(`/${localStorage.getItem("userType").toLowerCase()}`);
+    const session = getValidStoredSession();
+
+    if (session) {
+      navigate(`/${session.userType.toLowerCase()}`);
     }
   }, [navigate]);
 

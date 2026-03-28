@@ -48,6 +48,17 @@ const addMaterialController = async (req, res) => {
       return ApiResponse.badRequest("Invalid material type").send(res);
     }
 
+    let filePath;
+    if (req.file) {
+      if (req.file.path && req.file.path.startsWith("http")) {
+        filePath = req.file.path;
+      } else if (req.file.filename) {
+        filePath = `/media/uploads/${req.file.filename}`;
+      } else {
+        filePath = req.file.path;
+      }
+    }
+
     const material = await Material.create({
       title,
       subject,
@@ -55,7 +66,7 @@ const addMaterialController = async (req, res) => {
       semester,
       branch,
       type,
-      file: req.file.path,
+      file: filePath,
     });
 
     const populatedMaterial = await Material.findById(material._id)
@@ -105,7 +116,15 @@ const updateMaterialController = async (req, res) => {
       }
       updateData.type = type;
     }
-    if (req.file) updateData.file = req.file.path;
+    if (req.file) {
+      if (req.file.path && req.file.path.startsWith("http")) {
+        updateData.file = req.file.path;
+      } else if (req.file.filename) {
+        updateData.file = `/media/uploads/${req.file.filename}`;
+      } else {
+        updateData.file = req.file.path;
+      }
+    }
 
     const updatedMaterial = await Material.findByIdAndUpdate(id, updateData, {
       new: true,

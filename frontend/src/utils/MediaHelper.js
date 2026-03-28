@@ -10,6 +10,17 @@ export const getMediaSource = (path) => {
     return path;
   }
   
-  // If it's a legacy local file, prepend the media link
-  return `${process.env.REACT_APP_MEDIA_LINK}/${path}`;
+  const mediaBase = process.env.REACT_APP_MEDIA_LINK?.endsWith("/") 
+    ? process.env.REACT_APP_MEDIA_LINK.slice(0, -1) 
+    : (process.env.REACT_APP_MEDIA_LINK || "http://localhost:4000/media");
+
+  // If the path already includes /media or media, we need to be careful
+  if (path.startsWith("/media")) {
+    // Extract everything after /media
+    const relativePath = path.replace("/media", "");
+    return `${mediaBase}${relativePath}`;
+  }
+
+  const cleanPath = path.startsWith("/") ? path : `/${path}`;
+  return `${mediaBase}${cleanPath}`;
 };

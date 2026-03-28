@@ -1,10 +1,13 @@
 require("dotenv").config();
-const connectToMongo = require("./database/db");
+const connectToMongo = require("./Database/db");
 const express = require("express");
 const app = express();
 const path = require("path");
-connectToMongo();
-const port = process.env.PORT || 4000;
+const net = require("net");
+connectToMongo().catch((err) => {
+  console.error("Fatal DB connection error:", err.message);
+});
+const defaultPort = Number(process.env.PORT) || 4000;
 var cors = require("cors");
 const http = require("http");
 const { Server } = require("socket.io");
@@ -67,6 +70,47 @@ app.use("/api/attendance", require("./routes/attendance.route"));
 app.use("/api/fee", require("./routes/fee.route"));
 app.use("/api/library", require("./routes/library.route"));
 
-server.listen(port, () => {
-  console.log(`Server Listening On http://localhost:${port}`);
+const findAvailablePort = (port) =>
+  new Promise((resolve, reject) => {
+    const tester = net.createServer();
+
+    tester.once("error", (error) => {
+      if (error.code === "EADDRINUSE") {
+        resolve(findAvailablePort(port + 1));
+        return;
+      }
+
+      reject(error);
+    });
+
+    tester.once("listening", () => {
+      tester.close(() => resolve(port));
+    });
+
+    tester.listen(port);
+  });
+
+const startServer = async () => {
+  try {
+    const port = await findAvailablePort(defaultPort);
+
+    if (port !== defaultPort) {
+      console.warn(
+        `Port ${defaultPort} is busy, starting backend on http://localhost:${port} instead.`
+      );
+    }
+
+    server.listen(port, () => {
+      console.log(`Server Listening On http://localhost:${port}`);
+    });
+  } catch (error) {
+    console.error("Failed to start server:", error.message);
+    process.exit(1);
+  }
+};
+
+server.on("error", (error) => {
+  console.error("HTTP server error:", error.message);
 });
+
+startServer();

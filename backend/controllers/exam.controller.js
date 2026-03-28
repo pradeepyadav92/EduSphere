@@ -26,7 +26,13 @@ const addExamController = async (req, res) => {
   try {
     const formData = req.body;
     if (req.file) {
-      formData.timetableLink = req.file.filename;
+      if (req.file.path && req.file.path.startsWith("http")) {
+        formData.timetableLink = req.file.path;
+      } else if (req.file.filename) {
+        formData.timetableLink = `/media/uploads/${req.file.filename}`;
+      } else {
+        formData.timetableLink = req.file.path;
+      }
     }
     const exam = await Exam.create(formData);
     return ApiResponse.success(exam, "Exam Added Successfully!").send(res);
@@ -39,7 +45,13 @@ const updateExamController = async (req, res) => {
   try {
     const formData = req.body;
     if (req.file) {
-      formData.timetableLink = req.file.filename;
+      if (req.file.path && req.file.path.startsWith("http")) {
+        formData.timetableLink = req.file.path;
+      } else if (req.file.filename) {
+        formData.timetableLink = `/media/uploads/${req.file.filename}`;
+      } else {
+        formData.timetableLink = req.file.path;
+      }
     }
     const exam = await Exam.findByIdAndUpdate(req.params.id, formData, {
       new: true,

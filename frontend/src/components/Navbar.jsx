@@ -3,13 +3,13 @@ import { FiLogOut } from "react-icons/fi";
 import { useLocation, useNavigate } from "react-router-dom";
 import { RxDashboard } from "react-icons/rx";
 import CustomButton from "./CustomButton";
+import { clearStoredSession } from "../utils/auth";
 const Navbar = () => {
   const router = useLocation();
   const navigate = useNavigate();
 
   const logouthandler = () => {
-    localStorage.removeItem("userToken");
-    localStorage.removeItem("userType");
+    clearStoredSession();
     navigate("/");
   };
 

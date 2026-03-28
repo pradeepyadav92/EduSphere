@@ -62,7 +62,16 @@ const getAllDetailsController = async (req, res) => {
 
 const registerStudentController = async (req, res) => {
   try {
-    const profile = req.file ? req.file.path : "default.png";
+    let profile = "default.png";
+    if (req.file) {
+      if (req.file.path && req.file.path.startsWith("http")) {
+        profile = req.file.path;
+      } else if (req.file.filename) {
+        profile = `/media/uploads/${req.file.filename}`;
+      } else {
+        profile = req.file.path;
+      }
+    }
 
     const enrollmentNo = Math.floor(100000 + Math.random() * 900000);
     const email = `${enrollmentNo}@gmail.com`;
@@ -454,7 +463,17 @@ const checkStatusController = async (req, res) => {
 
 const applyStudentController = async (req, res) => {
   try {
-    const profile = req.file ? req.file.path : "default.png";
+    let profile = "default.png";
+    if (req.file) {
+      // Cloudinary returns a URL in req.file.path; local disk returns an absolute fs path
+      if (req.file.path && req.file.path.startsWith("http")) {
+        profile = req.file.path; // Cloudinary URL
+      } else if (req.file.filename) {
+        profile = `/media/uploads/${req.file.filename}`; // local disk
+      } else {
+        profile = req.file.path;
+      }
+    }
     
     // Structure emergencyContact if sent as flat fields or bracket notation
     const emergencyContact = {

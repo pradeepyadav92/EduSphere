@@ -4,6 +4,7 @@ const express = require("express");
 const app = express();
 const path = require("path");
 const net = require("net");
+const isProduction = process.env.NODE_ENV === "production";
 connectToMongo().catch((err) => {
   console.error("Fatal DB connection error:", err.message);
 });
@@ -12,10 +13,26 @@ var cors = require("cors");
 const http = require("http");
 const { Server } = require("socket.io");
 
+const allowedOrigins = [
+  process.env.FRONTEND_API_LINK,
+  ...(isProduction ? [] : ["http://localhost:3000", "http://localhost:3001"]),
+]
+  .flatMap((origin) => (origin ? origin.split(",") : []))
+  .map((origin) => origin.trim())
+  .filter(Boolean);
+
+const corsOriginHandler = (origin, callback) => {
+  if (!origin || allowedOrigins.includes(origin)) {
+    callback(null, true);
+  } else {
+    callback(new Error("Not allowed by CORS"));
+  }
+};
+
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: "*",
+    origin: isProduction ? allowedOrigins : "*",
     methods: ["GET", "POST"],
   },
 });
@@ -29,21 +46,9 @@ io.on("connection", (socket) => {
   });
 });
 
-const allowedOrigins = [
-  process.env.FRONTEND_API_LINK,
-  "http://localhost:3000",
-  "http://localhost:3001",
-];
-
 app.use(
   cors({
-    origin: function (origin, callback) {
-      if (!origin || allowedOrigins.indexOf(origin) !== -1) {
-        callback(null, true);
-      } else {
-        callback(new Error("Not allowed by CORS"));
-      }
-    },
+    origin: corsOriginHandler,
   })
 );
 
@@ -92,7 +97,9 @@ const findAvailablePort = (port) =>
 
 const startServer = async () => {
   try {
-    const port = await findAvailablePort(defaultPort);
+    const port = isProduction
+      ? defaultPort
+      : await findAvailablePort(defaultPort);
 
     if (port !== defaultPort) {
       console.warn(

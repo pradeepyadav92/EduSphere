@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
 import { toast, Toaster } from "react-hot-toast";
 import Notice from "../Notice";
@@ -91,6 +92,7 @@ const Home = () => {
 
   useEffect(() => {
     fetchUserDetails();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, userToken]);
 
   const renderContent = () => {
@@ -116,7 +118,7 @@ const Home = () => {
     const pathMenuId = urlParams.get("page") || "home";
     const validMenu = MENU_ITEMS.find((item) => item.id === pathMenuId);
     setSelectedMenu(validMenu ? validMenu.id : "home");
-  }, [location.pathname]);
+  }, [location.search]);
 
   const handleMenuClick = (menuId) => {
     setSelectedMenu(menuId);

@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
 import { toast, Toaster } from "react-hot-toast";
 import Notice from "../Notice";
@@ -93,6 +94,7 @@ const Home = () => {
 
   useEffect(() => {
     fetchUserDetails();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, userToken]);
 
   useEffect(() => {

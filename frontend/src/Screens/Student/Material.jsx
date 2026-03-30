@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
 import { MdLink } from "react-icons/md";
 import Heading from "../../components/Heading";
@@ -20,10 +21,12 @@ const Material = () => {
 
   useEffect(() => {
     fetchSubjects();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
     fetchMaterials();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filters]);
 
   const fetchSubjects = async () => {

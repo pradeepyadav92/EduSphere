@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
 import { MdOutlineDelete, MdEdit } from "react-icons/md";
@@ -33,6 +34,7 @@ const Subject = () => {
     getSubjectHandler();
     getBranchHandler();
     getFacultyHandler();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const getSubjectHandler = async () => {

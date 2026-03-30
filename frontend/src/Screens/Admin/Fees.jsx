@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
 import axiosWrapper from "../../utils/AxiosWrapper";
@@ -186,6 +187,7 @@ const Fees = () => {
 
   useEffect(() => {
     fetchBranches();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

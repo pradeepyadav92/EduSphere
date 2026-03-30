@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from "react";
 import { toast } from "react-hot-toast";
 import { MdOutlineDelete, MdEdit } from "react-icons/md";
@@ -50,6 +51,7 @@ const Admin = () => {
 
   useEffect(() => {
     getAdminsHandler();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const getAdminsHandler = async () => {

@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import axiosWrapper from "../../utils/AxiosWrapper";
@@ -34,6 +35,7 @@ const Library = () => {
 
   useEffect(() => {
     fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userData]);
 
   const filteredBooks = books.filter(

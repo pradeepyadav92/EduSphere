@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
 import { IoMdLink, IoMdAdd, IoMdClose } from "react-icons/io";
 import { HiOutlineCalendar } from "react-icons/hi";
@@ -61,6 +62,7 @@ const Notice = () => {
 
   useEffect(() => {
     getNotices();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [router.pathname]);
 
   const openAddModal = () => {

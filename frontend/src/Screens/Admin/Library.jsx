@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
 import axiosWrapper from "../../utils/AxiosWrapper";
@@ -50,6 +51,7 @@ const Library = () => {
 
   useEffect(() => {
     fetchBooks();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

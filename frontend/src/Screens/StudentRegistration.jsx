@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from "react";
 import toast from "react-hot-toast";
 import axiosWrapper from "../utils/AxiosWrapper"; // This might require auth? No, we will use axios directly if axiosWrapper has auth interceptors, wait!
-import { useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
 
 const StudentRegistration = () => {
-  const navigate = useNavigate();
   const [branches, setBranches] = useState([]);
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({

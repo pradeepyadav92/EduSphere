@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
 import axiosWrapper from "../../utils/AxiosWrapper";
@@ -202,7 +203,7 @@ const Attendance = () => {
             <div className="space-y-1">
               <h3 className="font-semibold text-gray-800">{selectedSubject?.name || "Day-wise Attendance"}</h3>
               <p className="text-sm text-gray-500">
-                Semester {selectedSemester} • {selectedBranch?.name} • {new Date(selectedDate).toLocaleDateString()}
+                Semester {selectedSemester} â€¢ {selectedBranch?.name} â€¢ {new Date(selectedDate).toLocaleDateString()}
               </p>
             </div>
             <CustomButton
@@ -275,3 +276,4 @@ const Attendance = () => {
 };
 
 export default Attendance;
+

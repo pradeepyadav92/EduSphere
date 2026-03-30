@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import axiosWrapper from "../../utils/AxiosWrapper";
@@ -28,6 +29,7 @@ const Fees = () => {
 
   useEffect(() => {
     fetchFees();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userData]);
 
   const totalPaid = feeRecords.reduce(

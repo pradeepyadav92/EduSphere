@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from "react";
 import { toast } from "react-hot-toast";
 import { MdOutlineDelete, MdEdit } from "react-icons/md";
@@ -53,6 +54,7 @@ const Faculty = () => {
   useEffect(() => {
     getFacultyHandler();
     getBranchHandler();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const getBranchHandler = async () => {

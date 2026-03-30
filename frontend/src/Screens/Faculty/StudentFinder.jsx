@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import Heading from "../../components/Heading";
 import axiosWrapper from "../../utils/AxiosWrapper";
@@ -65,13 +65,9 @@ const StudentFinder = () => {
     toast.loading("Searching students...");
     setStudents([]);
     try {
-      const response = await axiosWrapper.post(
-        `student/search`,
-        searchParams,
-        {
-          headers: { Authorization: `Bearer ${userToken}` },
-        }
-      );
+      const response = await axiosWrapper.post(`student/search`, searchParams, {
+        headers: { Authorization: `Bearer ${userToken}` },
+      });
 
       toast.dismiss();
       if (response.data.success) {
@@ -99,17 +95,79 @@ const StudentFinder = () => {
     setShowModal(true);
   };
 
+  const detailsSections = selectedStudent
+    ? [
+        {
+          title: "Academic Information",
+          items: [
+            { label: "Enrollment No", value: selectedStudent.enrollmentNo },
+            { label: "Branch", value: selectedStudent.branchId?.name },
+            { label: "Semester", value: selectedStudent.semester },
+          ],
+        },
+        {
+          title: "Contact Information",
+          items: [
+            { label: "Email", value: selectedStudent.email },
+            { label: "Phone", value: selectedStudent.phone },
+            { label: "Address", value: selectedStudent.address },
+          ],
+        },
+        {
+          title: "Location Details",
+          items: [
+            { label: "City", value: selectedStudent.city },
+            { label: "State", value: selectedStudent.state },
+            { label: "Pincode", value: selectedStudent.pincode },
+            { label: "Country", value: selectedStudent.country },
+          ],
+        },
+        {
+          title: "Emergency Contact",
+          items: [
+            { label: "Name", value: selectedStudent.emergencyContact?.name },
+            {
+              label: "Relationship",
+              value: selectedStudent.emergencyContact?.relationship,
+            },
+            { label: "Phone", value: selectedStudent.emergencyContact?.phone },
+          ],
+        },
+      ]
+    : [];
+
+  const personalDetails = selectedStudent
+    ? [
+        {
+          label: "Full Name",
+          value: `${selectedStudent.firstName} ${selectedStudent.middleName} ${selectedStudent.lastName}`.replace(
+            /\s+/g,
+            " "
+          ).trim(),
+        },
+        { label: "Gender", value: selectedStudent.gender },
+        {
+          label: "Date of Birth",
+          value: new Date(selectedStudent.dob).toLocaleDateString(),
+        },
+        { label: "Blood Group", value: selectedStudent.bloodGroup },
+      ]
+    : [];
+
   return (
-    <div className="w-full mx-auto mt-10 flex justify-center items-start flex-col mb-10">
-      <div className="flex justify-between items-center w-full">
+    <div className="mx-auto flex w-full max-w-7xl flex-col px-3 py-4 md:px-5 md:py-6">
+      <div className="flex w-full items-center justify-between">
         <Heading title="Student Finder" />
       </div>
 
       <div className="my-6 mx-auto w-full">
-        <form onSubmit={searchStudents} className="flex items-center">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 w-[90%] mx-auto">
+        <form
+          onSubmit={searchStudents}
+          className="rounded-[22px] border border-gray-200 bg-white p-6 shadow-[0_12px_30px_rgba(37,71,154,0.06)]"
+        >
+          <div className="mx-auto grid w-full max-w-6xl grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="mb-2 block text-xs font-medium uppercase tracking-[0.16em] text-gray-500">
                 Enrollment Number
               </label>
               <input
@@ -117,13 +175,13 @@ const StudentFinder = () => {
                 name="enrollmentNo"
                 value={searchParams.enrollmentNo}
                 onChange={handleInputChange}
-                className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full rounded-[16px] border border-gray-200 bg-gray-50 px-4 py-3 text-sm text-gray-700 outline-none focus:border-blue-300"
                 placeholder="Enter enrollment number"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="mb-2 block text-xs font-medium uppercase tracking-[0.16em] text-gray-500">
                 Name
               </label>
               <input
@@ -131,55 +189,66 @@ const StudentFinder = () => {
                 name="name"
                 value={searchParams.name}
                 onChange={handleInputChange}
-                className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full rounded-[16px] border border-gray-200 bg-gray-50 px-4 py-3 text-sm text-gray-700 outline-none focus:border-blue-300"
                 placeholder="Enter student name"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="mb-2 block text-xs font-medium uppercase tracking-[0.16em] text-gray-500">
                 Semester
               </label>
-              <select
-                name="semester"
-                value={searchParams.semester}
-                onChange={handleInputChange}
-                className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              >
-                <option value="">Select Semester</option>
-                {[1, 2, 3, 4, 5, 6, 7, 8].map((sem) => (
-                  <option key={sem} value={sem}>
-                    Semester {sem}
-                  </option>
-                ))}
-              </select>
+              <div className="relative">
+                <select
+                  name="semester"
+                  value={searchParams.semester}
+                  onChange={handleInputChange}
+                  className="w-full appearance-none rounded-[16px] border border-gray-200 bg-gray-50 px-4 py-3 pr-10 text-sm text-gray-700 outline-none focus:border-blue-300"
+                >
+                  <option value="">Select Semester</option>
+                  {[1, 2, 3, 4, 5, 6, 7, 8].map((sem) => (
+                    <option key={sem} value={sem}>
+                      Semester {sem}
+                    </option>
+                  ))}
+                </select>
+                <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-400">
+                  v
+                </span>
+              </div>
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="mb-2 block text-xs font-medium uppercase tracking-[0.16em] text-gray-500">
                 Branch
               </label>
-              <select
-                name="branch"
-                value={searchParams.branch}
-                onChange={handleInputChange}
-                className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              >
-                <option value="">Select Branch</option>
-                {branches?.map((branch) => (
-                  <option key={branch._id} value={branch._id}>
-                    {branch.name}
-                  </option>
-                ))}
-              </select>
+              <div className="relative">
+                <select
+                  name="branch"
+                  value={searchParams.branch}
+                  onChange={handleInputChange}
+                  className="w-full appearance-none rounded-[16px] border border-gray-200 bg-gray-50 px-4 py-3 pr-10 text-sm text-gray-700 outline-none focus:border-blue-300"
+                >
+                  <option value="">Select Branch</option>
+                  {branches?.map((branch) => (
+                    <option key={branch._id} value={branch._id}>
+                      {branch.name}
+                    </option>
+                  ))}
+                </select>
+                <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-400">
+                  v
+                </span>
+              </div>
             </div>
           </div>
 
-          <div className="mt-6 flex justify-center w-[10%] mx-auto">
+          <div className="mt-6 flex justify-center">
             <CustomButton
               type="submit"
               disabled={dataLoading}
               variant="primary"
+              className="rounded-[16px] bg-blue-600 px-10 py-3 font-medium text-white shadow-[0_12px_24px_rgba(37,99,235,0.18)] hover:bg-blue-700"
             >
               {dataLoading ? "Searching..." : "Search"}
             </CustomButton>
@@ -187,224 +256,159 @@ const StudentFinder = () => {
         </form>
 
         {!hasSearched && (
-          <div className="text-center mt-8 text-gray-600 flex flex-col items-center justify-center my-10 bg-white p-10 rounded-lg mx-auto w-[40%]">
+          <div className="mx-auto my-10 flex w-full max-w-xl flex-col items-center justify-center rounded-[22px] border border-gray-200 bg-white p-10 text-center text-gray-600 shadow-[0_12px_30px_rgba(37,71,154,0.06)]">
             <img
               src="/assets/filter.svg"
               alt="Select filters"
-              className="w-64 h-64 mb-4"
+              className="mb-4 h-40 w-40"
             />
             Please select at least one filter to search students
           </div>
         )}
 
-        {hasSearched && students.length === 0 && (
-          <NoData title="No students found" />
-        )}
+        {hasSearched && students.length === 0 && <NoData title="No students found" />}
 
         {students.length > 0 && (
           <div className="mt-8">
-            <h2 className="text-xl font-semibold mb-4">Search Results</h2>
-            <div className="overflow-x-auto">
-              <table className="min-w-full bg-white border border-gray-300">
-                <thead>
-                  <tr className="bg-gray-100">
-                    <th className="px-6 py-3 border-b text-left">Profile</th>
-                    <th className="px-6 py-3 border-b text-left">Name</th>
-                    <th className="px-6 py-3 border-b text-left">
-                      Enrollment No
-                    </th>
-                    <th className="px-6 py-3 border-b text-left">Semester</th>
-                    <th className="px-6 py-3 border-b text-left">Branch</th>
-                    <th className="px-6 py-3 border-b text-left">Email</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {students.map((student) => (
-                    <tr
-                      key={student._id}
-                      className="hover:bg-gray-50 cursor-pointer"
-                      onClick={() => handleRowClick(student)}
-                    >
-                      <td className="px-6 py-4 border-b">
-                        <img
-                          src={getMediaSource(student.profile)}
-
-                          alt={`${student.firstName}'s profile`}
-                          className="w-12 h-12 object-cover rounded-full"
-                          onError={(e) => {
-                            e.target.src =
-                              "https://images.unsplash.com/photo-1744315900478-fa44dc6a4e89?q=80&w=3087&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D";
-                          }}
-                        />
-                      </td>
-                      <td className="px-6 py-4 border-b">
-                        {student.firstName} {student.middleName}{" "}
-                        {student.lastName}
-                      </td>
-                      <td className="px-6 py-4 border-b">
-                        {student.enrollmentNo}
-                      </td>
-                      <td className="px-6 py-4 border-b">{student.semester}</td>
-                      <td className="px-6 py-4 border-b">
-                        {student.branchId?.name}
-                      </td>
-                      <td className="px-6 py-4 border-b">{student.email}</td>
+            <h2 className="mb-4 text-xl font-semibold text-gray-800">Search Results</h2>
+            <div className="overflow-hidden rounded-[22px] border border-gray-200 bg-white shadow-[0_12px_30px_rgba(37,71,154,0.06)]">
+              <div className="overflow-x-auto">
+                <table className="min-w-full bg-white text-sm">
+                  <thead>
+                    <tr className="bg-[#123d8f] text-white">
+                      <th className="px-6 py-4 text-left font-semibold">Profile</th>
+                      <th className="px-6 py-4 text-left font-semibold">Name</th>
+                      <th className="px-6 py-4 text-left font-semibold">Enrollment No</th>
+                      <th className="px-6 py-4 text-left font-semibold">Semester</th>
+                      <th className="px-6 py-4 text-left font-semibold">Branch</th>
+                      <th className="px-6 py-4 text-left font-semibold">Email</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody className="divide-y divide-gray-100">
+                    {students.map((student) => (
+                      <tr
+                        key={student._id}
+                        className="cursor-pointer transition-colors hover:bg-blue-50/40"
+                        onClick={() => handleRowClick(student)}
+                      >
+                        <td className="px-6 py-4">
+                          <img
+                            src={getMediaSource(student.profile)}
+                            alt={`${student.firstName}'s profile`}
+                            className="h-12 w-12 rounded-[12px] object-cover"
+                            onError={(e) => {
+                              e.target.src =
+                                "https://images.unsplash.com/photo-1744315900478-fa44dc6a4e89?q=80&w=3087&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D";
+                            }}
+                          />
+                        </td>
+                        <td className="px-6 py-4 font-medium text-gray-800">
+                          {student.firstName} {student.middleName} {student.lastName}
+                        </td>
+                        <td className="px-6 py-4 text-gray-600">{student.enrollmentNo}</td>
+                        <td className="px-6 py-4 text-gray-600">{student.semester}</td>
+                        <td className="px-6 py-4 text-gray-600">{student.branchId?.name}</td>
+                        <td className="px-6 py-4 text-gray-600">{student.email}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
         )}
 
         {showModal && selectedStudent && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-            <div className="bg-white rounded-lg p-8 max-w-4xl w-full max-h-[90vh] overflow-y-auto">
-              <div className="flex justify-between items-start mb-6">
-                <h2 className="text-2xl font-bold">Student Details</h2>
-                <CustomButton
-                  onClick={() => setShowModal(false)}
-                  variant="secondary"
-                >
-                  <svg
-                    className="w-6 h-6"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm">
+            <div className="max-h-[90vh] w-full max-w-6xl overflow-y-auto rounded-[28px] border border-gray-200 bg-[#f8fafc] p-4 shadow-[0_30px_70px_rgba(15,23,42,0.18)] md:p-5">
+              <div className="rounded-[24px] border border-gray-200 bg-gradient-to-r from-white via-blue-50/40 to-white p-6 shadow-[0_12px_30px_rgba(37,71,154,0.06)]">
+                <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
+                  <div className="flex flex-col gap-5 sm:flex-row sm:items-center">
+                    <div className="h-28 w-28 overflow-hidden rounded-full border border-white bg-white shadow-lg">
+                      <img
+                        src={getMediaSource(selectedStudent.profile)}
+                        alt={`${selectedStudent.firstName}'s profile`}
+                        className="h-full w-full object-cover"
+                        onError={(e) => {
+                          e.target.src =
+                            "https://images.unsplash.com/photo-1744315900478-fa44dc6a4e89?q=80&w=3087&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D";
+                        }}
+                      />
+                    </div>
+
+                    <div>
+                      <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-blue-600">
+                        Student Dashboard View
+                      </p>
+                      <h2 className="mt-2 text-3xl font-semibold tracking-[-0.03em] text-gray-900">
+                        {`${selectedStudent.firstName} ${selectedStudent.middleName || ""} ${selectedStudent.lastName}`.replace(/\s+/g, " ").trim()}
+                      </h2>
+                      <div className="mt-4 flex flex-wrap gap-2 text-sm font-medium">
+                        <span className="rounded-full border border-gray-200 bg-white px-4 py-2 text-gray-700">
+                          Enrollment No: {selectedStudent.enrollmentNo || "N/A"}
+                        </span>
+                        <span className="rounded-full border border-blue-100 bg-blue-50 px-4 py-2 text-blue-700">
+                          {selectedStudent.branchId?.name || "Department Pending"}
+                        </span>
+                        <span className="rounded-full border border-emerald-100 bg-emerald-50 px-4 py-2 text-emerald-700 capitalize">
+                          Semester {selectedStudent.semester || "N/A"}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <CustomButton
+                    onClick={() => setShowModal(false)}
+                    variant="secondary"
+                    className="!rounded-[16px] !bg-gray-100 !px-5 !py-3 !text-gray-700 !shadow-none hover:!translate-y-0 hover:!bg-gray-200"
                   >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M6 18L18 6M6 6l12 12"
-                    />
-                  </svg>
-                </CustomButton>
+                    Close
+                  </CustomButton>
+                </div>
               </div>
 
-              <div className="flex flex-col md:flex-row gap-8 mb-8">
-                <div className="w-full md:w-1/3">
-                  <img
-                    src={getMediaSource(selectedStudent.profile)}
-
-                    alt={`${selectedStudent.firstName}'s profile`}
-                    className="w-full h-auto object-cover rounded-lg"
-                    onError={(e) => {
-                      e.target.src =
-                        "https://images.unsplash.com/photo-1744315900478-fa44dc6a4e89?q=80&w=3087&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D";
-                    }}
-                  />
-                </div>
-
-                <div className="w-full md:w-2/3">
-                  <h3 className="text-xl font-semibold mb-4">
+              <div className="mt-5 grid grid-cols-1 gap-5">
+                <div className="rounded-[24px] border border-gray-200 bg-white p-6 shadow-[0_12px_30px_rgba(37,71,154,0.06)]">
+                  <h3 className="mb-4 text-[1.05rem] font-semibold tracking-[-0.02em] text-gray-900 md:text-[1.2rem]">
                     Personal Information
                   </h3>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <p>
-                      <span className="font-medium">Full Name:</span>{" "}
-                      {selectedStudent.firstName} {selectedStudent.middleName}{" "}
-                      {selectedStudent.lastName}
-                    </p>
-                    <p>
-                      <span className="font-medium">Gender:</span>{" "}
-                      {selectedStudent.gender}
-                    </p>
-                    <p>
-                      <span className="font-medium">Date of Birth:</span>{" "}
-                      {new Date(selectedStudent.dob).toLocaleDateString()}
-                    </p>
-                    <p>
-                      <span className="font-medium">Blood Group:</span>{" "}
-                      {selectedStudent.bloodGroup}
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div className="bg-gray-50 p-6 rounded-lg">
-                  <h3 className="text-lg font-semibold mb-4">
-                    Academic Information
-                  </h3>
-                  <div className="space-y-2">
-                    <p>
-                      <span className="font-medium">Enrollment No:</span>{" "}
-                      {selectedStudent.enrollmentNo}
-                    </p>
-                    <p>
-                      <span className="font-medium">Branch:</span>{" "}
-                      {selectedStudent.branchId?.name}
-                    </p>
-                    <p>
-                      <span className="font-medium">Semester:</span>{" "}
-                      {selectedStudent.semester}
-                    </p>
+                  <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+                    {personalDetails.map((item) => (
+                      <div key={item.label} className="rounded-[18px] border border-gray-100 bg-gray-50 px-5 py-4">
+                        <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-gray-400">
+                          {item.label}
+                        </p>
+                        <p className="mt-2 text-base font-semibold text-gray-900 break-words">
+                          {item.value || "N/A"}
+                        </p>
+                      </div>
+                    ))}
                   </div>
                 </div>
 
-                <div className="bg-gray-50 p-6 rounded-lg">
-                  <h3 className="text-lg font-semibold mb-4">
-                    Contact Information
-                  </h3>
-                  <div className="space-y-2">
-                    <p>
-                      <span className="font-medium">Email:</span>{" "}
-                      {selectedStudent.email}
-                    </p>
-                    <p>
-                      <span className="font-medium">Phone:</span>{" "}
-                      {selectedStudent.phone}
-                    </p>
-                    <p>
-                      <span className="font-medium">Address:</span>{" "}
-                      {selectedStudent.address}
-                    </p>
-                  </div>
-                </div>
-
-                <div className="bg-gray-50 p-6 rounded-lg">
-                  <h3 className="text-lg font-semibold mb-4">
-                    Location Details
-                  </h3>
-                  <div className="space-y-2">
-                    <p>
-                      <span className="font-medium">City:</span>{" "}
-                      {selectedStudent.city}
-                    </p>
-                    <p>
-                      <span className="font-medium">State:</span>{" "}
-                      {selectedStudent.state}
-                    </p>
-                    <p>
-                      <span className="font-medium">Pincode:</span>{" "}
-                      {selectedStudent.pincode}
-                    </p>
-                    <p>
-                      <span className="font-medium">Country:</span>{" "}
-                      {selectedStudent.country}
-                    </p>
-                  </div>
-                </div>
-
-                <div className="bg-gray-50 p-6 rounded-lg">
-                  <h3 className="text-lg font-semibold mb-4">
-                    Emergency Contact
-                  </h3>
-                  <div className="space-y-2">
-                    <p>
-                      <span className="font-medium">Name:</span>{" "}
-                      {selectedStudent.emergencyContact?.name}
-                    </p>
-                    <p>
-                      <span className="font-medium">Relationship:</span>{" "}
-                      {selectedStudent.emergencyContact?.relationship}
-                    </p>
-                    <p>
-                      <span className="font-medium">Phone:</span>{" "}
-                      {selectedStudent.emergencyContact?.phone}
-                    </p>
-                  </div>
+                <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
+                  {detailsSections.map((section) => (
+                    <div
+                      key={section.title}
+                      className="rounded-[24px] border border-gray-200 bg-white p-6 shadow-[0_12px_30px_rgba(37,71,154,0.06)]"
+                    >
+                      <h3 className="mb-4 text-[1.05rem] font-semibold tracking-[-0.02em] text-gray-900">
+                        {section.title}
+                      </h3>
+                      <div className="grid gap-4">
+                        {section.items.map((item) => (
+                          <div key={item.label} className="rounded-[18px] border border-gray-100 bg-gray-50 px-5 py-4">
+                            <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-gray-400">
+                              {item.label}
+                            </p>
+                            <p className="mt-2 text-sm font-semibold text-gray-900 break-words">
+                              {item.value || "N/A"}
+                            </p>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </div>
             </div>

@@ -5,7 +5,11 @@ const bcrypt = require("bcryptjs");
 const ApiResponse = require("../../utils/ApiResponse");
 const jwt = require("jsonwebtoken");
 const sendEmail = require("../../utils/SendMail");
-const { getApprovalTemplate, getRejectionTemplate } = require("../../utils/EmailTemplates");
+const {
+  getApprovalTemplate,
+  getRejectionTemplate,
+  getResetPasswordTemplate,
+} = require("../../utils/EmailTemplates");
 
 const loginStudentController = async (req, res) => {
   try {

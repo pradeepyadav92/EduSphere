@@ -13,13 +13,12 @@ const Branch = () => {
     name: "",
     branchId: "",
   });
-  const [branch, setBranch] = useState();
+  const [branch, setBranch] = useState([]);
   const [showAddForm, setShowAddForm] = useState(false);
   const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
   const [selectedBranchId, setSelectedBranchId] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
   const [dataLoading, setDataLoading] = useState(false);
-  const [processLoading, setProcessLoading] = useState(false);
 
   useEffect(() => {
     getBranchHandler();
@@ -44,7 +43,6 @@ const Branch = () => {
         setBranch([]);
         return;
       }
-      console.error(error);
       toast.error(error.response?.data?.message || "Error fetching branches");
     } finally {
       setDataLoading(false);
@@ -66,17 +64,11 @@ const Branch = () => {
       };
       let response;
       if (isEditing) {
-        response = await axiosWrapper.patch(
-          `/branch/${selectedBranchId}`,
-          data,
-          {
-            headers: headers,
-          }
-        );
-      } else {
-        response = await axiosWrapper.post(`/branch`, data, {
-          headers: headers,
+        response = await axiosWrapper.patch(`/branch/${selectedBranchId}`, data, {
+          headers,
         });
+      } else {
+        response = await axiosWrapper.post(`/branch`, data, { headers });
       }
       toast.dismiss();
       if (response.data.success) {
@@ -91,21 +83,21 @@ const Branch = () => {
       }
     } catch (error) {
       toast.dismiss();
-      toast.error(error.response.data.message);
+      toast.error(error.response?.data?.message || "Error updating branch");
     }
   };
 
-  const deleteBranchHandler = async (id) => {
+  const deleteBranchHandler = (id) => {
     setIsDeleteConfirmOpen(true);
     setSelectedBranchId(id);
   };
 
-  const editBranchHandler = (branch) => {
+  const editBranchHandler = (branchItem) => {
     setData({
-      name: branch.name,
-      branchId: branch.branchId,
+      name: branchItem.name,
+      branchId: branchItem.branchId,
     });
-    setSelectedBranchId(branch._id);
+    setSelectedBranchId(branchItem._id);
     setIsEditing(true);
     setShowAddForm(true);
   };
@@ -117,12 +109,9 @@ const Branch = () => {
         "Content-Type": "application/json",
         Authorization: `Bearer ${localStorage.getItem("userToken")}`,
       };
-      const response = await axiosWrapper.delete(
-        `/branch/${selectedBranchId}`,
-        {
-          headers: headers,
-        }
-      );
+      const response = await axiosWrapper.delete(`/branch/${selectedBranchId}`, {
+        headers,
+      });
       toast.dismiss();
       if (response.data.success) {
         toast.success("Branch has been deleted successfully");
@@ -133,92 +122,156 @@ const Branch = () => {
       }
     } catch (error) {
       toast.dismiss();
-      toast.error(error.response.data.message);
+      toast.error(error.response?.data?.message || "Error deleting branch");
     }
   };
 
+  const closeModal = () => {
+    setShowAddForm(false);
+    setIsEditing(false);
+    setSelectedBranchId(null);
+    setData({ name: "", branchId: "" });
+  };
+
   return (
-    <div className="w-full mx-auto mt-10 flex justify-center items-start flex-col mb-10 relative">
-      <Heading title="Branch Details" />
-      <CustomButton
-        onClick={() => {
-          setShowAddForm(!showAddForm);
-          if (!showAddForm) {
-            setData({ name: "", branchId: "" });
-            setIsEditing(false);
-            setSelectedBranchId(null);
-          }
-        }}
-        className="fixed bottom-8 right-8 !rounded-full !p-4"
-      >
-        {showAddForm ? (
-          <IoMdClose className="text-3xl" />
-        ) : (
-          <IoMdAdd className="text-3xl" />
-        )}
-      </CustomButton>
+    <div className="w-full px-1 py-2 md:px-2">
+      <div className="flex flex-col gap-4 rounded-[22px] border border-gray-200 bg-white p-5 shadow-[0_12px_30px_rgba(37,71,154,0.06)] md:flex-row md:items-center md:justify-between">
+        <Heading title="Branch Details" />
+        <CustomButton
+          onClick={() => setShowAddForm(true)}
+          className="!rounded-[14px] !bg-blue-600 !px-4 !py-2.5 !shadow-none hover:!translate-y-0 hover:!bg-blue-700"
+        >
+          <IoMdAdd className="mr-2 text-lg" />
+          Add Branch
+        </CustomButton>
+      </div>
 
       {dataLoading && <Loading />}
 
+      {!dataLoading && (
+        <div className="mt-5 overflow-hidden rounded-[22px] border border-gray-200 bg-white shadow-[0_12px_30px_rgba(37,71,154,0.06)]">
+          <div className="flex items-center justify-between border-b border-gray-200 px-5 py-4">
+            <div>
+              <h3 className="text-base font-semibold text-gray-800">All Branches</h3>
+              <p className="text-sm text-gray-500">Manage departments in the updated admin layout.</p>
+            </div>
+            <span className="rounded-full border border-blue-100 bg-blue-50 px-3 py-1 text-xs font-semibold text-blue-700">
+              {branch?.length || 0} records
+            </span>
+          </div>
+
+          <div className="overflow-x-auto">
+            <table className="min-w-full text-sm">
+              <thead className="bg-[#123d8f] text-white">
+                <tr>
+                  <th className="px-5 py-4 text-left text-[11px] font-semibold uppercase tracking-[0.18em]">Branch Name</th>
+                  <th className="px-5 py-4 text-left text-[11px] font-semibold uppercase tracking-[0.18em]">Branch ID</th>
+                  <th className="px-5 py-4 text-left text-[11px] font-semibold uppercase tracking-[0.18em]">Created At</th>
+                  <th className="px-5 py-4 text-center text-[11px] font-semibold uppercase tracking-[0.18em]">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {branch && branch.length > 0 ? (
+                  branch.map((item, index) => (
+                    <tr key={index} className="border-b border-gray-100 text-gray-700 transition hover:bg-blue-50/40">
+                      <td className="px-5 py-4 font-semibold text-gray-900">{item.name}</td>
+                      <td className="px-5 py-4 font-mono text-xs text-blue-700">{item.branchId}</td>
+                      <td className="px-5 py-4">{new Date(item.createdAt).toLocaleDateString()}</td>
+                      <td className="px-5 py-4">
+                        <div className="flex justify-center gap-2">
+                          <CustomButton
+                            variant="secondary"
+                            className="!rounded-[12px] !bg-slate-600 !p-2.5 !shadow-none hover:!translate-y-0"
+                            onClick={() => editBranchHandler(item)}
+                          >
+                            <MdEdit />
+                          </CustomButton>
+                          <CustomButton
+                            variant="danger"
+                            className="!rounded-[12px] !bg-rose-600 !p-2.5 !shadow-none hover:!translate-y-0"
+                            onClick={() => deleteBranchHandler(item._id)}
+                          >
+                            <MdOutlineDelete />
+                          </CustomButton>
+                        </div>
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="4" className="px-5 py-14 text-center text-sm text-gray-500">
+                      No branches found.
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
+
       {showAddForm && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-          <div className="bg-white rounded-lg w-[500px] max-h-[90vh] overflow-y-auto">
-            <div className="flex justify-between items-center p-6 border-b">
-              <h2 className="text-xl font-semibold">
-                {isEditing ? "Edit Branch" : "Add New Branch"}
-              </h2>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/45 p-4 backdrop-blur-sm">
+          <div className="w-full max-w-xl overflow-hidden rounded-[24px] border border-gray-200 bg-white shadow-2xl">
+            <div className="flex items-center justify-between border-b border-gray-200 px-6 py-5">
+              <div>
+                <h2 className="text-xl font-semibold text-gray-900">
+                  {isEditing ? "Edit Branch" : "Add New Branch"}
+                </h2>
+                <p className="mt-1 text-sm text-gray-500">Keep the same data, only in a cleaner modal layout.</p>
+              </div>
               <button
-                onClick={() => setShowAddForm(false)}
-                className="text-gray-500 hover:text-gray-700"
+                type="button"
+                onClick={closeModal}
+                className="flex h-10 w-10 items-center justify-center rounded-[14px] bg-gray-100 text-gray-500 transition hover:bg-gray-200 hover:text-gray-700"
               >
-                <IoMdClose className="text-3xl" />
+                <IoMdClose className="text-xl" />
               </button>
             </div>
 
-            <form onSubmit={addBranchHandler} className="p-6 space-y-4">
-              <div>
-                <label
-                  htmlFor="name"
-                  className="block text-sm font-medium text-gray-700 mb-2"
-                >
-                  Branch Name
-                </label>
-                <input
-                  type="text"
-                  id="name"
-                  value={data.name}
-                  onChange={(e) => setData({ ...data, name: e.target.value })}
-                  className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
+            <form onSubmit={addBranchHandler} className="space-y-5 px-6 py-6">
+              <div className="grid gap-5 md:grid-cols-2">
+                <div>
+                  <label htmlFor="name" className="mb-2 block text-sm font-medium text-gray-700">
+                    Branch Name
+                  </label>
+                  <input
+                    type="text"
+                    id="name"
+                    value={data.name}
+                    onChange={(e) => setData({ ...data, name: e.target.value })}
+                    className="w-full rounded-[14px] border border-gray-200 bg-gray-50 px-4 py-3 text-sm text-gray-700 outline-none transition focus:border-blue-300 focus:bg-white"
+                  />
+                </div>
+
+                <div>
+                  <label htmlFor="branchId" className="mb-2 block text-sm font-medium text-gray-700">
+                    Branch ID
+                  </label>
+                  <input
+                    type="text"
+                    id="branchId"
+                    value={data.branchId}
+                    onChange={(e) => setData({ ...data, branchId: e.target.value })}
+                    className="w-full rounded-[14px] border border-gray-200 bg-gray-50 px-4 py-3 text-sm text-gray-700 outline-none transition focus:border-blue-300 focus:bg-white"
+                  />
+                </div>
               </div>
 
-              <div>
-                <label
-                  htmlFor="branchId"
-                  className="block text-sm font-medium text-gray-700 mb-2"
-                >
-                  Branch ID
-                </label>
-                <input
-                  type="text"
-                  id="branchId"
-                  value={data.branchId}
-                  onChange={(e) =>
-                    setData({ ...data, branchId: e.target.value })
-                  }
-                  className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-              </div>
-
-              <div className="flex justify-end gap-4 pt-4 border-t">
+              <div className="flex justify-end gap-3 border-t border-gray-100 pt-5">
                 <CustomButton
                   variant="secondary"
-                  onClick={() => setShowAddForm(false)}
+                  onClick={closeModal}
+                  className="!rounded-[14px] !bg-gray-100 !px-4 !py-2.5 !text-gray-700 !shadow-none hover:!translate-y-0 hover:!bg-gray-200"
                 >
                   Cancel
                 </CustomButton>
-                <CustomButton variant="primary" onClick={addBranchHandler}>
-                  {isEditing ? "Update" : "Add"}
+                <CustomButton
+                  variant="primary"
+                  type="submit"
+                  className="!rounded-[14px] !bg-blue-600 !px-4 !py-2.5 !shadow-none hover:!translate-y-0 hover:!bg-blue-700"
+                >
+                  {isEditing ? "Update Branch" : "Add Branch"}
                 </CustomButton>
               </div>
             </form>
@@ -226,59 +279,6 @@ const Branch = () => {
         </div>
       )}
 
-      {!dataLoading && (
-        <div className="mt-8 w-full">
-          <table className="text-sm min-w-full bg-white">
-            <thead>
-              <tr className="bg-blue-500 text-white">
-                <th className="py-4 px-6 text-left font-semibold">
-                  Branch Name
-                </th>
-                <th className="py-4 px-6 text-left font-semibold">Branch ID</th>
-                <th className="py-4 px-6 text-left font-semibold">
-                  Created At
-                </th>
-                <th className="py-4 px-6 text-center font-semibold">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {branch && branch.length > 0 ? (
-                branch.map((item, index) => (
-                  <tr key={index} className="border-b hover:bg-blue-50">
-                    <td className="py-4 px-6">{item.name}</td>
-                    <td className="py-4 px-6">{item.branchId}</td>
-                    <td className="py-4 px-6">
-                      {new Date(item.createdAt).toLocaleDateString()}
-                    </td>
-                    <td className="py-4 px-6 text-center flex justify-center gap-4">
-                      <CustomButton
-                        variant="secondary"
-                        className="!p-2"
-                        onClick={() => editBranchHandler(item)}
-                      >
-                        <MdEdit />
-                      </CustomButton>
-                      <CustomButton
-                        variant="danger"
-                        className="!p-2"
-                        onClick={() => deleteBranchHandler(item._id)}
-                      >
-                        <MdOutlineDelete />
-                      </CustomButton>
-                    </td>
-                  </tr>
-                ))
-              ) : (
-                <tr>
-                  <td colSpan="4" className="text-center text-base pt-10">
-                    No branches found.
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
-        </div>
-      )}
       <DeleteConfirm
         isOpen={isDeleteConfirmOpen}
         onClose={() => setIsDeleteConfirmOpen(false)}

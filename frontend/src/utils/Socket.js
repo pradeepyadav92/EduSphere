@@ -1,8 +1,10 @@
 import { io } from "socket.io-client";
 
-const socketLink = process.env.REACT_APP_BASE_URL 
-  ? process.env.REACT_APP_BASE_URL.replace('/api/', '').replace('/api', '') 
-  : "http://localhost:4000";
+const envBaseUrl = process.env.REACT_APP_BASE_URL?.trim();
+const socketLink = envBaseUrl
+  ? envBaseUrl.replace(/\/api\/?$/, "")
+  : (typeof window !== "undefined" ? window.location.origin : undefined);
+
 const socket = io(socketLink, {
   autoConnect: true,
 });

@@ -9,10 +9,13 @@ export const getMediaSource = (path) => {
   if (path.startsWith("http")) {
     return path;
   }
-  
-  const mediaBase = process.env.REACT_APP_MEDIA_LINK?.endsWith("/") 
-    ? process.env.REACT_APP_MEDIA_LINK.slice(0, -1) 
-    : (process.env.REACT_APP_MEDIA_LINK || "http://localhost:4000/media");
+
+  const envMediaLink = process.env.REACT_APP_MEDIA_LINK?.trim();
+  const mediaBase = envMediaLink
+    ? (envMediaLink.endsWith("/") ? envMediaLink.slice(0, -1) : envMediaLink)
+    : (typeof window !== "undefined"
+        ? `${window.location.origin}/media`
+        : "/media");
 
   // If the path already includes /media or media, we need to be careful
   if (path.startsWith("/media")) {

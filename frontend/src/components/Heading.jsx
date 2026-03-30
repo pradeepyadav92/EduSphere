@@ -1,12 +1,13 @@
 import React from "react";
-const heading = (props) => {
+
+const Heading = ({ title }) => {
   return (
-    <div className="flex justify-between items-center w-full">
-      <p className="font-semibold text-3xl border-l-8 border-red-500 pl-3">
-        {props.title}
+    <div className="flex w-full items-center justify-between">
+      <p className="border-l-4 border-[#21439c] pl-3 text-[1.45rem] font-semibold tracking-[-0.02em] text-[#233d88] md:text-[1.6rem]">
+        {title}
       </p>
     </div>
   );
 };
 
-export default heading;
+export default Heading;

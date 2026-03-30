@@ -917,39 +917,61 @@ const StudentViewModal = ({ isOpen, onClose, student }) => {
 
   if (!isOpen || !student) return null;
 
+  const studentName = `${student.firstName || ""} ${student.middleName || ""} ${student.lastName || ""}`
+    .replace(/\s+/g, " ")
+    .trim();
+
   return (
-    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-[60] p-4">
-      <div className="bg-white rounded-3xl w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col shadow-2xl">
-        {/* Header */}
-        <div className="bg-blue-600 p-8 text-white flex justify-between items-start">
-          <div className="flex gap-6 items-center">
-            <img 
-              src={getMediaSource(student.profile)}
-              className="w-24 h-24 rounded-2xl object-cover border-4 border-white/20 shadow-lg"
-              alt="Profile"
-              onError={(e) => e.target.src = "https://images.unsplash.com/photo-1744315900478-fa44dc6a4e89?q=80&w=3087&auto=format&fit=crop"}
-            />
-            <div>
-              <h2 className="text-3xl font-black">{student.firstName} {student.lastName}</h2>
-              <div className="flex gap-4 mt-2">
-                <span className="bg-white/20 px-3 py-1 rounded-full text-xs font-bold font-mono tracking-wider">ROLL: {student.rollNo}</span>
-                <span className="bg-emerald-400/20 text-emerald-100 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider">{student.status}</span>
+    <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm">
+      <div className="flex max-h-[90vh] w-full max-w-6xl flex-col overflow-hidden rounded-[28px] border border-gray-200 bg-[#f8fafc] p-4 shadow-2xl md:p-5">
+        <div className="rounded-[24px] border border-gray-200 bg-gradient-to-r from-white via-blue-50/40 to-white p-6 shadow-[0_12px_30px_rgba(37,71,154,0.06)]">
+          <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
+            <div className="flex flex-col gap-5 sm:flex-row sm:items-center">
+              <div className="h-28 w-28 overflow-hidden rounded-full border border-white bg-white shadow-lg">
+                <img
+                  src={getMediaSource(student.profile)}
+                  className="h-full w-full object-cover"
+                  alt="Profile"
+                  onError={(e) => (e.target.src = "https://images.unsplash.com/photo-1744315900478-fa44dc6a4e89?q=80&w=3087&auto=format&fit=crop")}
+                />
+              </div>
+              <div>
+                <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-blue-600">
+                  Student Dashboard View
+                </p>
+                <h2 className="mt-2 text-3xl font-semibold tracking-[-0.03em] text-gray-900">
+                  {studentName}
+                </h2>
+                <div className="mt-4 flex flex-wrap gap-2 text-sm font-medium">
+                  <span className="rounded-full border border-gray-200 bg-white px-4 py-2 text-gray-700">
+                    Roll No: {student.rollNo || "N/A"}
+                  </span>
+                  <span className="rounded-full border border-blue-100 bg-blue-50 px-4 py-2 text-blue-700">
+                    {student.branchId?.name || "Department Pending"}
+                  </span>
+                  <span className="rounded-full border border-emerald-100 bg-emerald-50 px-4 py-2 text-emerald-700 capitalize">
+                    {student.status || "Active"}
+                  </span>
+                </div>
               </div>
             </div>
+
+            <button
+              onClick={onClose}
+              className="flex h-11 w-11 items-center justify-center rounded-[16px] bg-gray-100 text-gray-600 transition hover:bg-gray-200"
+            >
+              <IoMdClose className="text-2xl" />
+            </button>
           </div>
-          <button onClick={onClose} className="p-2 hover:bg-white/10 rounded-xl transition-colors">
-            <IoMdClose className="text-3xl" />
-          </button>
         </div>
 
-        {/* Tabs */}
-        <div className="flex border-b">
+        <div className="mt-5 flex rounded-[18px] border border-gray-200 bg-white px-2 py-2">
           {["details", "attendance", "performance"].map(tab => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
-              className={`px-8 py-4 font-bold uppercase text-xs tracking-widest transition-all border-b-2 ${
-                activeTab === tab ? "border-blue-600 text-blue-600" : "border-transparent text-gray-400 hover:text-gray-600"
+              className={`rounded-[14px] px-5 py-3 text-xs font-semibold uppercase tracking-[0.18em] transition-all ${
+                activeTab === tab ? "bg-blue-50 text-blue-700" : "text-gray-400 hover:text-gray-600"
               }`}
             >
               {tab}
@@ -957,34 +979,61 @@ const StudentViewModal = ({ isOpen, onClose, student }) => {
           ))}
         </div>
 
-        {/* Content */}
-        <div className="flex-1 overflow-y-auto p-8 bg-gray-50/50">
+        <div className="mt-5 flex-1 overflow-y-auto">
           {activeTab === "details" && (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 animate-in fade-in slide-in-from-bottom-2 duration-300">
+            <div className="grid grid-cols-1 gap-5">
+              <div className="rounded-[24px] border border-gray-200 bg-white p-6 shadow-[0_12px_30px_rgba(37,71,154,0.06)]">
+                <h3 className="mb-4 text-[1.05rem] font-semibold tracking-[-0.02em] text-gray-900 md:text-[1.2rem]">
+                  Personal Information
+                </h3>
+                <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+                  {[
+                    { label: "Full Name", value: studentName },
+                    { label: "Enrollment No", value: student.enrollmentNo },
+                    { label: "Gender", value: student.gender },
+                    { label: "Date Of Birth", value: new Date(student.dob).toLocaleDateString() },
+                    { label: "Blood Group", value: student.bloodGroup },
+                    { label: "Semester", value: student.semester ? `Semester ${student.semester}` : "N/A" },
+                  ].map((item) => (
+                    <div key={item.label} className="rounded-[18px] border border-gray-100 bg-gray-50 px-5 py-4">
+                      <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-gray-400">{item.label}</p>
+                      <p className="mt-2 text-base font-semibold text-gray-900 break-words">{item.value || "N/A"}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
               <DetailCard title="Academic" items={[
                 { label: "Branch", value: student.branchId?.name },
                 { label: "Current Semester", value: student.semester },
                 { label: "Enrollment No", value: student.enrollmentNo },
+                { label: "Status", value: student.status },
               ]} />
               <DetailCard title="Contact" items={[
                 { label: "Email", value: student.email },
                 { label: "Phone", value: student.phone },
                 { label: "Address", value: student.address },
+                { label: "City", value: student.city },
+                { label: "State", value: student.state },
               ]} />
               <DetailCard title="Personal" items={[
-                { label: "DOB", value: new Date(student.dob).toLocaleDateString() },
-                { label: "Gender", value: student.gender },
-                { label: "Blood Group", value: student.bloodGroup },
+                { label: "Pincode", value: student.pincode },
+                { label: "Country", value: student.country },
+                { label: "Emergency Contact", value: student.emergencyContact?.name },
+                { label: "Relationship", value: student.emergencyContact?.relationship },
+                { label: "Emergency Phone", value: student.emergencyContact?.phone },
               ]} />
+              </div>
             </div>
           )}
 
           {activeTab === "attendance" && (
-            <div className="space-y-4">
+            <div className="space-y-4 rounded-[24px] border border-gray-200 bg-white p-6 shadow-[0_12px_30px_rgba(37,71,154,0.06)]">
               {loading ? <div className="text-center py-10">Loading...</div> : (
-                <div className="bg-white rounded-2xl shadow-sm border overflow-hidden">
+                <div className="overflow-hidden rounded-[20px] border border-gray-200 bg-white">
                   <table className="w-full text-left">
-                    <thead className="bg-gray-50 text-[10px] font-black uppercase text-gray-400">
+                    <thead className="bg-[#123d8f] text-[11px] font-semibold uppercase tracking-[0.18em] text-white">
                       <tr>
                         <th className="p-4 px-6">Date</th>
                         <th className="p-4 px-6">Subject</th>
@@ -993,11 +1042,11 @@ const StudentViewModal = ({ isOpen, onClose, student }) => {
                     </thead>
                     <tbody className="divide-y text-sm">
                       {attendance.length > 0 ? attendance.map((at, i) => (
-                        <tr key={i} className="hover:bg-gray-50/50">
+                        <tr key={i} className="hover:bg-blue-50/30">
                           <td className="p-4 px-6 font-mono font-medium">{new Date(at.date).toLocaleDateString()}</td>
-                          <td className="p-4 px-6 font-bold text-gray-700">{at.subject}</td>
+                          <td className="p-4 px-6 font-semibold text-gray-700">{at.subject}</td>
                           <td className="p-4 px-6">
-                            <span className={`px-2 py-1 rounded text-[10px] font-black uppercase ${
+                            <span className={`rounded-full px-3 py-1 text-[10px] font-semibold uppercase ${
                               at.status === "Present" ? "bg-emerald-50 text-emerald-600" : "bg-rose-50 text-rose-600"
                             }`}>{at.status}</span>
                           </td>
@@ -1011,14 +1060,14 @@ const StudentViewModal = ({ isOpen, onClose, student }) => {
           )}
 
           {activeTab === "performance" && (
-            <div className="space-y-4">
+            <div className="space-y-4 rounded-[24px] border border-gray-200 bg-white p-6 shadow-[0_12px_30px_rgba(37,71,154,0.06)]">
                {loading ? <div className="text-center py-10">Loading...</div> : (
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                    {marks.length > 0 ? marks.map((m, i) => (
-                     <div key={i} className="bg-white p-6 rounded-2xl shadow-sm border-l-4 border-blue-500">
-                        <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">{m.subject?.name || "Exam"}</p>
-                        <h4 className="text-2xl font-black text-gray-900 mt-1">{m.marks} <span className="text-sm text-gray-400">/ 100</span></h4>
-                        <p className="text-xs text-gray-500 mt-2 font-bold">Sem {m.semester}</p>
+                     <div key={i} className="rounded-[20px] border border-gray-200 bg-gray-50 p-5">
+                        <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-gray-400">{m.subject?.name || "Exam"}</p>
+                        <h4 className="mt-2 text-2xl font-semibold text-gray-900">{m.marks} <span className="text-sm text-gray-400">/ 100</span></h4>
+                        <p className="mt-2 text-xs font-medium text-gray-500">Sem {m.semester}</p>
                      </div>
                    )) : <div className="col-span-full py-10 text-center text-gray-400 italic bg-white rounded-2xl border">No performance records found</div>}
                 </div>
@@ -1032,13 +1081,13 @@ const StudentViewModal = ({ isOpen, onClose, student }) => {
 };
 
 const DetailCard = ({ title, items }) => (
-  <div className="bg-white p-6 rounded-3xl shadow-sm border border-gray-100 h-full">
-    <h3 className="text-xs font-black text-gray-400 uppercase tracking-widest mb-6 pb-2 border-b">{title}</h3>
-    <div className="space-y-4">
+  <div className="rounded-[24px] border border-gray-200 bg-white p-6 shadow-[0_12px_30px_rgba(37,71,154,0.06)] h-full">
+    <h3 className="mb-4 text-[1.05rem] font-semibold tracking-[-0.02em] text-gray-900">{title}</h3>
+    <div className="grid gap-4">
       {items.map((item, i) => (
-        <div key={i}>
-          <p className="text-[10px] font-bold text-gray-400 uppercase tracking-tighter">{item.label}</p>
-          <p className="text-sm font-bold text-gray-800 break-words">{item.value || "N/A"}</p>
+        <div key={i} className="rounded-[18px] border border-gray-100 bg-gray-50 px-5 py-4">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-gray-400">{item.label}</p>
+          <p className="mt-2 text-sm font-semibold text-gray-900 break-words">{item.value || "N/A"}</p>
         </div>
       ))}
     </div>
